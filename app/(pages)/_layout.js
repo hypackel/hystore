@@ -1,6 +1,5 @@
-import { Stack, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function RootLayout() {
@@ -20,11 +19,11 @@ export default function RootLayout() {
 						<Feather name="home" color={color} size={24} />
 					),
                     tabBarLabel: "Home",
-                    tabBarActiveTintColor: "#EF4444",
+                    tabBarActiveTintColor: "#FF4A4A",
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#EF4444", // Background color of header
+						backgroundColor: "#FF4A4A", // Background color of header
 						elevation: 0, // Remove border shadow on Android
 						shadowOpacity: 0, // Remove shadow on iOS
 						borderBottomWidth: 0, // Remove bottom border
