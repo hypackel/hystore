@@ -32,7 +32,6 @@ const AppDetail = () => {
 		}
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const loadData = async () => {
 			if (!source) {
@@ -51,7 +50,7 @@ const AppDetail = () => {
 
 	if (loading) {
 		return (
-			<View className="flex-1 p-5 bg-[#44ef9a] items-center justify-center">
+			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color="#ffffff" />
 			</View>
 		);
@@ -59,10 +58,8 @@ const AppDetail = () => {
 
 	if (!app) {
 		return (
-			<View className="flex-1 p-5 bg-[#44ef9a] items-center justify-center">
-				<Text className="text-black text-2xl font-bold text-center">
-					App not found!
-				</Text>
+			<View style={styles.loadingContainer}>
+				<Text style={styles.errorText}>App not found!</Text>
 				<Button title="Go Back" onPress={() => router.back()} />
 			</View>
 		);
@@ -70,7 +67,7 @@ const AppDetail = () => {
 
 	const installWithAltStore = () => {
 		const altStoreURL = `altstore://install?url=${encodeURIComponent(app.downloadURL)}`;
-		router.replace(altStoreURL); // Replace the current route with altStoreURL;
+		router.replace(altStoreURL);
 	};
 
 	const installWithSideStore = () => {
@@ -80,71 +77,112 @@ const AppDetail = () => {
 
 	const installWithTrollStore = () => {
 		const trollStoreURL = `apple-magnifier://install?url=${encodeURIComponent(app.downloadURL)}`;
-		router.replace(trollStoreURL); // Replace the current route with trollStoreURL;
+		router.replace(trollStoreURL);
 	};
 
 	return (
 		<>
-			<TouchableOpacity
-				className="bg-[#44ef9a] text-center w-screen py-2 rounded px-3 inline-flex" // Changed here
-				onPress={() => router.back()}
-			>
-				<View className="flex flex-row items-center">
-					<Ionicons
-						name="chevron-back-outline"
-						size={15}
-						className="text-blue-600"
-					/>
-					<Text className="text-blue-600 ml-1">Go Back</Text>
+			<TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+				<View style={styles.backButtonContainer}>
+					<Ionicons name="chevron-back-outline" size={15} style={styles.backIcon} />
+					<Text style={styles.backText}>Go Back</Text>
 				</View>
 			</TouchableOpacity>
-			<ScrollView className="flex-1 p-5 bg-[#44ef9a]">
+
+			<ScrollView style={styles.container}>
 				{app.iconURL && (
 					<Image
 						source={{ uri: app.iconURL }}
-						className="w-24 h-24 mb-5 self-center rounded-md"
+						style={styles.appIcon}
 					/>
 				)}
 				{app.name && (
-					<Text className="text-black text-2xl font-bold text-center">
-						{app.name}
-					</Text>
+					<Text style={styles.appTitle}>{app.name}</Text>
 				)}
 				{app.sourceName && (
-					<Text className="text-light-gray text-left my-2">
-						Source: {app.sourceName}
-					</Text>
+					<Text style={styles.appDetailText}>Source: {app.sourceName}</Text>
 				)}
 				{app.version && (
-					<Text className="text-light-gray text-left my-2">
-						Version: {app.version}
-					</Text>
+					<Text style={styles.appDetailText}>Version: {app.version}</Text>
 				)}
 				{app.bundleIdentifier && (
-					<Text className="text-light-gray text-left my-2">
-						Bundle Ident: {app.bundleIdentifier}
-					</Text>
+					<Text style={styles.appDetailText}>Bundle Identifier: {app.bundleIdentifier}</Text>
 				)}
 				{app.size && (
-					<Text className="text-light-gray text-left my-2">
+					<Text style={styles.appDetailText}>
 						Size: {(app.size / 1024 / 1024).toFixed(2)} MB
 					</Text>
 				)}
 				{app.localizedDescription && (
-					<Text className="text-gray-600 mb-5 text-left">
+					<Text style={styles.descriptionText}>
 						Description: {app.localizedDescription}
 					</Text>
 				)}
 
 				<Button title="Install with AltStore" onPress={installWithAltStore} />
 				<Button title="Install with SideStore" onPress={installWithSideStore} />
-				<Button
-					title="Install with TrollStore"
-					onPress={installWithTrollStore}
-				/>
+				<Button title="Install with TrollStore" onPress={installWithTrollStore} />
 			</ScrollView>
 		</>
 	);
+};
+
+const styles = {
+	container: {
+		flex: 1,
+		padding: 16,
+		backgroundColor: '#1F1F1F',
+	},
+	loadingContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#44ef9a',
+	},
+	errorText: {
+		color: '#000',
+		fontSize: 24,
+		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	backButton: {
+		backgroundColor: '#44ef9a',
+		padding: 10,
+	},
+	backButtonContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	backIcon: {
+		color: '#4A90E2',
+	},
+	backText: {
+		color: '#4A90E2',
+		marginLeft: 5,
+	},
+	appIcon: {
+		width: 96,
+		height: 96,
+		borderRadius: 12,
+		alignSelf: 'center',
+		marginBottom: 16,
+	},
+	appTitle: {
+		fontSize: 24,
+		fontWeight: 'bold',
+		color: '#FFF',
+		textAlign: 'center',
+		marginBottom: 16,
+	},
+	appDetailText: {
+		fontSize: 16,
+		color: '#BBB',
+		marginBottom: 8,
+	},
+	descriptionText: {
+		color: '#AAA',
+		marginBottom: 16,
+	},
 };
 
 export default AppDetail;

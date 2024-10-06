@@ -14,7 +14,7 @@ export default function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false); 
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchData = async (repos) => {
     setLoading(true);
@@ -36,7 +36,7 @@ export default function App() {
       });
 
       setAppsData(combinedApps);
-      setFilteredData(combinedApps); // Initialize filtered data with all apps
+      setFilteredData(combinedApps);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -72,12 +72,11 @@ export default function App() {
       );
       setFilteredData(filtered);
     } else {
-      setFilteredData(appsData); // Show all apps if search query is empty
+      setFilteredData(appsData); 
     }
   };
 
   const renderAppItem = ({ item }) => {
-    // Find the index of the clicked app in the appsData array
     const index = appsData.findIndex(app => app.bundleIdentifier === item.bundleIdentifier);
   
     return (
@@ -86,19 +85,23 @@ export default function App() {
           flex: 1,
           marginHorizontal: 8,
           marginBottom: 16,
-          backgroundColor: '#1c1c1c',
-          borderRadius: 8,
+          backgroundColor: '#242424', // Darker background for cards
+          borderRadius: 12,
           overflow: 'hidden',
-          elevation: 2,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 5,
+          elevation: 4, // Card shadow for depth
         }}
-        onPress={() => router.push(`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`)} // Navigate to the detail page using index + 1
+        onPress={() => router.push(`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`)}
       >
-        <View style={{ flexDirection: 'row', padding: 16, alignItems: 'flex-start' }}>
+        <View style={{ flexDirection: 'row', padding: 16, alignItems: 'center' }}>
           <Image source={{ uri: item.iconURL }} style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }} />
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
-            <Text style={{ color: 'gray' }}>Source: {item.sourceName}</Text>
-            <Text style={{ color: '#4A4A4A' }} numberOfLines={2}>
+            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 18 }}>{item.name}</Text>
+            <Text style={{ color: '#CCC', marginTop: 4 }}>Source: {item.sourceName}</Text>
+            <Text style={{ color: '#888', marginTop: 4 }} numberOfLines={2}>
               {item.localizedDescription}
             </Text>
           </View>
@@ -106,25 +109,24 @@ export default function App() {
       </TouchableOpacity>
     );
   };
-  
-  
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FF4A4A' }}>
-      <View style={{ padding: 16 }}>
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, marginBottom: 16 }}>Fetched Apps</Text>
+    <View style={{ flex: 1, backgroundColor: '#121212' }}> 
+      <View style={{ padding: 16, backgroundColor: '#1F1F1F' }}> 
+        <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 24, marginBottom: 16 }}>Fetched Apps</Text>
         <TextInput
           placeholder="Search apps..."
-          placeholderTextColor="#fff" 
+          placeholderTextColor="#888" 
           value={searchQuery}
           onChangeText={handleSearch}
           style={{
             height: 40,
-            borderColor: 'white',
+            borderColor: '#444',
             borderWidth: 1,
             borderRadius: 8,
             paddingHorizontal: 10,
-            color: 'white',
+            color: '#FFF',
+            backgroundColor: '#2C2C2C',
             marginBottom: 16
           }}
         />
@@ -134,7 +136,7 @@ export default function App() {
         <ActivityIndicator size="large" color="#ffffff" />
       ) : (
         <FlatList
-          data={filteredData} // Use filtered data for FlatList
+          data={filteredData}
           renderItem={renderAppItem}
           keyExtractor={(item, index) => `${item.bundleIdentifier}-${index}`}
           contentContainerStyle={{ paddingHorizontal: 8 }}
@@ -144,7 +146,7 @@ export default function App() {
         />
       )}
 
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </View>
   );
 }

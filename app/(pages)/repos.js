@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
 	View,
 	TextInput,
-	Button,
 	FlatList,
 	Text,
 	TouchableOpacity,
+	ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -58,40 +58,93 @@ const CustomReposScreen = () => {
 
 	const renderRepoItem = ({ item }) => {
 		return (
-			<View className="flex-row justify-between items-center p-3 border-b border-lightgray">
-				<Text className="text-base">{item}</Text>
+			<View style={styles.repoItem}>
+				<Text style={styles.repoText}>{item}</Text>
 				<TouchableOpacity onPress={() => removeCustomRepo(item)}>
-					<Text className="text-red-600 font-bold">Remove</Text>
+					<Text style={styles.removeButton}>Remove</Text>
 				</TouchableOpacity>
 			</View>
 		);
 	};
 
 	return (
-		<View className="p-4 h-screen bg-[#89c4de] flex-col">
-			<Text className="text-2xl font-bold mb-2 text-black">Custom Repos</Text>
+		<View style={styles.container}>
+			<Text style={styles.title}>Custom Repos</Text>
 			<TextInput
-				className="h-10 border text-black border-black rounded-md mb-2 px-2"
+				style={styles.input}
 				placeholder="Add new repository URL"
-                placeholderTextColor="#000" 
+				placeholderTextColor="#888"
 				value={repoUrl}
 				onChangeText={setRepoUrl}
 			/>
-			<TouchableOpacity
-				className="bg-blue-600 text-white text-center w-fit py-2 rounded px-3 inline-flex" // Changed here
-				onPress={handleAddRepo}
-			>
-				<Text className="text-white text-center w-fit">Add Repository</Text>
+			<TouchableOpacity style={styles.addButton} onPress={handleAddRepo}>
+				<Text style={styles.addButtonText}>Add Repository</Text>
 			</TouchableOpacity>
 
 			<FlatList
 				data={customRepos}
 				renderItem={renderRepoItem}
 				keyExtractor={(item) => item}
-				className="mt-2"
+				style={styles.repoList}
 			/>
 		</View>
 	);
+};
+
+const styles = {
+	container: {
+		flex: 1,
+		padding: 16,
+		backgroundColor: '#1F1F1F',
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: 'bold',
+		color: '#FFF',
+		marginBottom: 16,
+	},
+	input: {
+		height: 40,
+		borderColor: '#444',
+		borderWidth: 1,
+		borderRadius: 8,
+		paddingHorizontal: 10,
+		backgroundColor: '#2C2C2C',
+		color: '#FFF',
+		marginBottom: 16,
+	},
+	addButton: {
+		backgroundColor: '#4A90E2',
+		padding: 12,
+		borderRadius: 8,
+		alignItems: 'center',
+		marginBottom: 16,
+	},
+	addButtonText: {
+		color: '#FFF',
+		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	repoList: {
+		marginTop: 16,
+	},
+	repoItem: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		padding: 10,
+		backgroundColor: '#2C2C2C',
+		borderRadius: 8,
+		marginBottom: 8,
+	},
+	repoText: {
+		color: '#FFF',
+		fontSize: 16,
+	},
+	removeButton: {
+		color: '#FF6B6B',
+		fontWeight: 'bold',
+	},
 };
 
 export default CustomReposScreen;

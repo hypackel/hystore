@@ -24,10 +24,11 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#FF4A4A",
+						backgroundColor: "#1c1c1c",  // Change to match the tab bar color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
+						height: 40,  // Make the header smaller by setting a smaller height
 					},
 				}}
 			/>
@@ -43,10 +44,11 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#89c4de",
+						backgroundColor: "#1c1c1c",  // Match the background color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
+						height: 40,  // Make the header smaller
 					},
 				}}
 			/>
@@ -54,14 +56,15 @@ export default function RootLayout() {
 				name="detail/[id]"
 				options={{
 					href: null,  // Set href to null to hide from tab bar
-                    headerTitle: "",
-                    tabBarLabel: "Repos",
+					headerTitle: "",
+					tabBarLabel: "Repos",
 					tabBarActiveTintColor: "#44ef9a",
 					headerStyle: {
-						backgroundColor: "#44ef9a",
+						backgroundColor: "#1c1c1c",  // Match the background color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
+						height: 40,  // Make the header smaller
 					},
 					headerShown: true,  // Optionally hide the header for this screen
 				}}
