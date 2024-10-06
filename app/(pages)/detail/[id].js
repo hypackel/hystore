@@ -30,6 +30,7 @@ const AppDetail = () => {
 		}
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const loadData = async () => {
 			if (!source) {
