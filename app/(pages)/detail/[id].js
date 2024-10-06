@@ -6,8 +6,10 @@ import {
 	ActivityIndicator,
 	ScrollView,
 	Button,
+	TouchableOpacity,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const AppDetail = () => {
 	const router = useRouter();
@@ -82,35 +84,66 @@ const AppDetail = () => {
 	};
 
 	return (
-		<ScrollView className="flex-1 p-5 bg-[#44ef9a]">
-			<Button title="Go Back" onPress={() => router.back()} />
-			<Image
-				source={{ uri: app.iconURL }}
-				className="w-24 h-24 mb-5 self-center rounded-md"
-			/>
-			<Text className="text-black text-2xl font-bold text-center">
-				{app.name}
-			</Text>
-			<Text className="text-light-gray text-center my-2">
-				Source: {app.sourceName}
-			</Text>
-			<Text className="text-black mb-5 text-center">
-				{app.localizedDescription}
-			</Text>
+		<>
+			<TouchableOpacity
+				className="bg-[#44ef9a] text-center w-fit py-2 rounded px-3 inline-flex" // Changed here
+				onPress={() => router.back()}
+			>
+				<View className="flex flex-row items-center">
+					<Ionicons
+						name="chevron-back-outline"
+						size={15}
+						className="text-blue-600"
+					/>
+					<Text className="text-blue-600 ml-1">Go Back</Text>
+				</View>
+			</TouchableOpacity>
+			<ScrollView className="flex-1 p-5 bg-[#44ef9a]">
+				{app.iconURL && (
+					<Image
+						source={{ uri: app.iconURL }}
+						className="w-24 h-24 mb-5 self-center rounded-md"
+					/>
+				)}
+				{app.name && (
+					<Text className="text-black text-2xl font-bold text-center">
+						{app.name}
+					</Text>
+				)}
+				{app.sourceName && (
+					<Text className="text-light-gray text-left my-2">
+						Source: {app.sourceName}
+					</Text>
+				)}
+				{app.version && (
+					<Text className="text-light-gray text-left my-2">
+						Version: {app.version}
+					</Text>
+				)}
+				{app.bundleIdentifier && (
+					<Text className="text-light-gray text-left my-2">
+						Bundle Ident: {app.bundleIdentifier}
+					</Text>
+				)}
+				{app.size && (
+					<Text className="text-light-gray text-left my-2">
+						Size: {(app.size / 1024 / 1024).toFixed(2)} MB
+					</Text>
+				)}
+				{app.localizedDescription && (
+					<Text className="text-gray-600 mb-5 text-left">
+						Description: {app.localizedDescription}
+					</Text>
+				)}
 
-			<Button
-				title="Install with AltStore"
-				onPress={installWithAltStore}
-			/>
-			<Button
-				title="Install with SideStore"
-				onPress={installWithSideStore}
-			/>
-			<Button
-				title="Install with TrollStore"
-				onPress={installWithTrollStore}
-			/>
-		</ScrollView>
+				<Button title="Install with AltStore" onPress={installWithAltStore} />
+				<Button title="Install with SideStore" onPress={installWithSideStore} />
+				<Button
+					title="Install with TrollStore"
+					onPress={installWithTrollStore}
+				/>
+			</ScrollView>
+		</>
 	);
 };
 
