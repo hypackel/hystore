@@ -8,20 +8,15 @@ const defaultUrls = [
   'https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json'
 ];
 
-export default function App() {
+export default function MainScreen({ navigation }) {
   const [appsData, setAppsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // State to manage refreshing
 
-  const fetchData = async () => {
+  const fetchData = async (repos) => {
+    setLoading(true);
     try {
-      // Fetch custom URLs from AsyncStorage
-      const customReposJson = await AsyncStorage.getItem('customRepos');
-      const customRepos = JSON.parse(customReposJson) || [];
-
-      // Combine custom and default URLs
-      const urls = [...customRepos, ...defaultUrls];
-
-      // Fetch data from combined URLs
+      const urls = [...repos, ...defaultUrls];
       const fetchedData = await Promise.all(
         urls.map(async (url) => {
           const response = await fetch(url);
@@ -42,12 +37,28 @@ export default function App() {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
+      setRefreshing(false); // Stop refreshing after data is fetched
     }
   };
 
+  const loadCustomRepos = async () => {
+    const customReposJson = await AsyncStorage.getItem('customRepos');
+    return JSON.parse(customReposJson) || [];
+  };
+
   useEffect(() => {
-    fetchData();
+    const loadData = async () => {
+      const repos = await loadCustomRepos();
+      fetchData(repos); // Fetch data when the component mounts
+    };
+    loadData();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    const repos = await loadCustomRepos();
+    fetchData(repos); // Fetch data when user pulls to refresh
+  };
 
   const renderAppItem = ({ item }) => {
     return (
@@ -56,14 +67,10 @@ export default function App() {
       >
         <View style={{ flexDirection: 'row', padding: 16, alignItems: 'flex-start' }}>
           <Image source={{ uri: item.iconURL }} style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }} />
-          
           <View style={{ flex: 1 }}>
             <Text style={{ color: 'black', fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ color: 'gray' }}>Source: {item.sourceName}</Text>
-            <Text 
-              style={{ color: '#4A4A4A' }} 
-              numberOfLines={2}
-            >
+            <Text style={{ color: '#4A4A4A' }} numberOfLines={2}>
               {item.localizedDescription}
             </Text>
           </View>
@@ -87,6 +94,8 @@ export default function App() {
           keyExtractor={(item, index) => `${item.bundleIdentifier}-${index}`}
           contentContainerStyle={{ paddingHorizontal: 8 }}
           numColumns={1}
+          refreshing={refreshing} // Pass the refreshing state
+          onRefresh={onRefresh} // Handle refresh action
         />
       )}
 
