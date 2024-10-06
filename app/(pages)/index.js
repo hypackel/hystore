@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, ActivityIndicator, Image, TouchableOpacity, TextInput } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const defaultUrls = [
@@ -76,9 +77,21 @@ export default function App() {
   };
 
   const renderAppItem = ({ item }) => {
+    // Find the index of the clicked app in the appsData array
+    const index = appsData.findIndex(app => app.bundleIdentifier === item.bundleIdentifier);
+  
     return (
       <TouchableOpacity
-        style={{ flex: 1, marginHorizontal: 8, marginBottom: 16, backgroundColor: '#1c1c1c', borderRadius: 8, overflow: 'hidden', elevation: 2 }}
+        style={{
+          flex: 1,
+          marginHorizontal: 8,
+          marginBottom: 16,
+          backgroundColor: '#1c1c1c',
+          borderRadius: 8,
+          overflow: 'hidden',
+          elevation: 2,
+        }}
+        onPress={() => router.push(`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`)} // Navigate to the detail page using index + 1
       >
         <View style={{ flexDirection: 'row', padding: 16, alignItems: 'flex-start' }}>
           <Image source={{ uri: item.iconURL }} style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }} />
@@ -93,6 +106,8 @@ export default function App() {
       </TouchableOpacity>
     );
   };
+  
+  
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FF4A4A' }}>
