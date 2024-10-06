@@ -100,6 +100,7 @@ export default function App() {
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, marginBottom: 16 }}>Fetched Apps</Text>
         <TextInput
           placeholder="Search apps..."
+          placeholderTextColor="#fff" 
           value={searchQuery}
           onChangeText={handleSearch}
           style={{

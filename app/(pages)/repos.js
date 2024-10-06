@@ -73,6 +73,7 @@ const CustomReposScreen = () => {
 			<TextInput
 				className="h-10 border text-black border-black rounded-md mb-2 px-2"
 				placeholder="Add new repository URL"
+                placeholderTextColor="#000" 
 				value={repoUrl}
 				onChangeText={setRepoUrl}
 			/>
