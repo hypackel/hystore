@@ -86,7 +86,7 @@ const AppDetail = () => {
 	return (
 		<>
 			<TouchableOpacity
-				className="bg-[#44ef9a] text-center w-fit py-2 rounded px-3 inline-flex" // Changed here
+				className="bg-[#44ef9a] text-center w-screen py-2 rounded px-3 inline-flex" // Changed here
 				onPress={() => router.back()}
 			>
 				<View className="flex flex-row items-center">
