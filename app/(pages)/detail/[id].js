@@ -146,7 +146,7 @@ const styles = {
 		textAlign: 'center',
 	},
 	backButton: {
-		backgroundColor: '#44ef9a',
+		backgroundColor: '#1c1c1c',
 		padding: 10,
 	},
 	backButtonContainer: {
