@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const urls = [
   'https://quarksources.github.io/dist/quantumsource.min.json',
-  'https://ipa.cypwn.xyz/cypwn.json'
+  'https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json'
 ];
 
 export default function App() {
@@ -20,10 +20,15 @@ export default function App() {
         })
       );
 
-      const ipaData = fetchedData[1];
-      if (ipaData.apps) {
-        setAppsData(ipaData.apps);
-      }
+      const combinedApps = fetchedData.flatMap((source, index) => {
+        return source.apps.map(app => ({
+          ...app,
+          sourceName: source.name,
+          sourceUrl: urls[index]
+        }));
+      });
+
+      setAppsData(combinedApps);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -35,20 +40,31 @@ export default function App() {
     fetchData();
   }, []);
 
-  const renderAppItem = ({ item }) => (
-    <TouchableOpacity 
+
+  const renderAppItem = ({ item }) => {
+
+    return (
+      <TouchableOpacity 
       className="mb-4 bg-white rounded-lg shadow-lg overflow-hidden"
-      style={{ flex: 1, marginHorizontal: 8 }} // Add horizontal margin
+      style={{ flex: 1, marginHorizontal: 8 }}
     >
-      <View className="p-4">
-        <Image source={{ uri: item.iconURL }} className="w-16 h-16 mb-2" />
-        <Text className="text-black font-bold">{item.name}</Text>
-        <Text className="text-gray-700">{item.localizedDescription}</Text>
-        <Text className="text-gray-500">Version: {item.version}</Text>
-        <Text className="text-gray-500">Size: {(item.size / 1024 / 1024).toFixed(2)} MB</Text>
+      <View className="flex-row p-4 items-start">
+        <Image source={{ uri: item.iconURL }} className="rounded-md w-16 h-16 mr-4" />
+        
+        <View className="flex-1">
+          <Text className="text-black font-bold">{item.name}</Text>
+          <Text className="text-gray-500">Source: {item.sourceName}</Text>
+          <Text 
+            className="text-gray-700" 
+            numberOfLines={2}
+          >
+            {item.localizedDescription}
+          </Text>
+        </View>
       </View>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>    
+    );
+  };
 
   return (
     <View className="flex-1 bg-red-500">
@@ -63,7 +79,7 @@ export default function App() {
           data={appsData}
           renderItem={renderAppItem}
           keyExtractor={(item, index) => `${item.bundleIdentifier}-${index}`}
-          contentContainerStyle={{ paddingHorizontal: 8 }} // Add horizontal padding to the list
+          contentContainerStyle={{ paddingHorizontal: 8 }}
           numColumns={1}
         />
       )}
