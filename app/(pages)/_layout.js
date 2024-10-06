@@ -1,12 +1,12 @@
 import { Stack, Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function RootLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: "#EF4444",
 				tabBarStyle: {
 					backgroundColor: "#1c1c1c", // Use tabBarStyle for background color
 					borderTopColor: "#1c1c1c",
@@ -20,6 +20,7 @@ export default function RootLayout() {
 						<Feather name="home" color={color} size={24} />
 					),
                     tabBarLabel: "Home",
+                    tabBarActiveTintColor: "#EF4444",
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
@@ -31,13 +32,21 @@ export default function RootLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="detail"
+				name="repos"
 				options={{
 					tabBarIcon: ({ color }) => (
-						<MaterialIcons color={color} name="details" size={24} />
+						<FontAwesome6 color={color} name="folder-open" size={24} />
 					),
-					headerTitle: "Home",
-					headerShown: false,
+                    tabBarLabel: "Repos",
+                    tabBarActiveTintColor: "#34d8ff",
+					headerTitle: "",
+					headerShown: true,
+                    headerStyle: {
+						backgroundColor: "#89c4de", // Background color of header
+						elevation: 0, // Remove border shadow on Android
+						shadowOpacity: 0, // Remove shadow on iOS
+						borderBottomWidth: 0, // Remove bottom border
+					},
 				}}
 			/>
 		</Tabs>
