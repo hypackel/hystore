@@ -6,6 +6,7 @@ import {
 	ActivityIndicator,
 	ScrollView,
 	TouchableOpacity,
+	Linking, // Import Linking
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -53,16 +54,29 @@ const AppDetail = () => {
 				setLoading(false);
 				return;
 			}
-
+	
 			const apps = await fetchAppsData(source);
 			const foundApp = apps.find((app) => app.bundleIdentifier === id);
-			setApp(foundApp);
+	
+			if (foundApp && foundApp.versions && foundApp.versions.length > 0) {
+				// Set the app with downloadURL from the latest version
+				setApp({
+					...foundApp,
+					downloadURL: foundApp.versions[0].downloadURL, // Use the latest version's download URL
+				});
+				console.log('Download URL:', foundApp.versions[0].downloadURL);
+			} else {
+				setApp(foundApp);
+			}
+	
 			setLoading(false);
 		};
-
+	
 		loadData();
 		getPreferredMethod();
 	}, [id, source]);
+	
+	
 
 	if (loading) {
 		return (
@@ -95,8 +109,18 @@ const AppDetail = () => {
 
 	const handleInstall = (method) => {
 		const url = installMethods[method] || installMethods.default;
-		if (url === app.downloadURL) {
-			alert("Default Install Method");
+
+		// Check if URL is defined
+		if (!url) {
+			alert("The URL is undefined, cannot proceed with the install.");
+			return;
+		}
+
+		if (method === "default") {
+			Linking.openURL(url).catch((err) => {
+				console.error("Failed to open URL:", err);
+				alert("Error opening the download URL.");
+			});
 		} else {
 			router.replace(url);
 		}
@@ -104,19 +128,31 @@ const AppDetail = () => {
 
 	return (
 		<>
-			<TouchableOpacity className="bg-[#1c1c1c] p-3" onPress={() => router.back()}>
+			<TouchableOpacity
+				className="bg-[#1c1c1c] p-3"
+				onPress={() => router.back()}
+			>
 				<View className="flex-row items-center">
-					<Ionicons name="chevron-back-outline" size={15} className="text-[#4A90E2]" />
+					<Ionicons
+						name="chevron-back-outline"
+						size={15}
+						className="text-[#4A90E2]"
+					/>
 					<Text className="text-[#4A90E2] ml-2">Go Back</Text>
 				</View>
 			</TouchableOpacity>
 
 			<ScrollView className="flex-1 p-4 bg-[#1F1F1F]">
 				{app.iconURL && (
-					<Image source={{ uri: app.iconURL }} className="w-24 h-24 rounded-lg self-center mb-4" />
+					<Image
+						source={{ uri: app.iconURL }}
+						className="w-24 h-24 rounded-lg self-center mb-4"
+					/>
 				)}
 				{app.name && (
-					<Text className="text-xl font-bold text-white text-center mb-4">{app.name}</Text>
+					<Text className="text-xl font-bold text-white text-center mb-4">
+						{app.name}
+					</Text>
 				)}
 				{app.sourceName && (
 					<Text className="text-gray-400 mb-2">Source: {app.sourceName}</Text>
@@ -125,7 +161,9 @@ const AppDetail = () => {
 					<Text className="text-gray-400 mb-2">Version: {app.version}</Text>
 				)}
 				{app.bundleIdentifier && (
-					<Text className="text-gray-400 mb-2">Bundle Identifier: {app.bundleIdentifier}</Text>
+					<Text className="text-gray-400 mb-2">
+						Bundle Identifier: {app.bundleIdentifier}
+					</Text>
 				)}
 				{app.size && (
 					<Text className="text-gray-400 mb-2">
