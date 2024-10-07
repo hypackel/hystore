@@ -46,12 +46,12 @@ export default function App() {
 						onPressOut={() => setPressedMethod(null)}
 						onPress={() => selectMethod(option.id)}
 						className={`px-4 py-2 mb-3 rounded-lg w-[48%] ${
-							preferredMethod === option.id ? "bg-blue-500" : "bg-gray-200"
+							preferredMethod === option.id ? "bg-[#44ef9a]" : "bg-zinc-700"
 						} ${pressedMethod === option.id ? "opacity-50" : "opacity-100"}`}
 					>
 						<Text
 							className={`text-center font-bold ${
-								preferredMethod === option.id ? "text-white" : "text-black"
+								preferredMethod === option.id ? "text-black" : "text-white"
 							}`}
 						>
 							{option.label}
