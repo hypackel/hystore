@@ -5,7 +5,7 @@ import {
 	Image,
 	ActivityIndicator,
 	ScrollView,
-	TouchableOpacity,
+	Pressable,
 	Linking, // Import Linking
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,7 +64,6 @@ const AppDetail = () => {
 					...foundApp,
 					downloadURL: foundApp.versions[0].downloadURL, // Use the latest version's download URL
 				});
-				console.log('Download URL:', foundApp.versions[0].downloadURL);
 			} else {
 				setApp(foundApp);
 			}
@@ -80,7 +79,7 @@ const AppDetail = () => {
 
 	if (loading) {
 		return (
-			<View className="flex-1 justify-center items-center bg-[#44ef9a]">
+			<View className="flex-1 justify-center items-center bg-[#1c1c1c]">
 				<ActivityIndicator size="large" color="#ffffff" />
 			</View>
 		);
@@ -90,9 +89,9 @@ const AppDetail = () => {
 		return (
 			<View className="flex-1 justify-center items-center bg-[#44ef9a]">
 				<Text className="text-black text-xl font-bold">App not found!</Text>
-				<TouchableOpacity className="mt-4" onPress={() => router.back()}>
+				<Pressable className="mt-4" onPress={() => router.back()}>
 					<Text className="text-blue-500">Go Back</Text>
-				</TouchableOpacity>
+				</Pressable>
 			</View>
 		);
 	}
@@ -112,7 +111,7 @@ const AppDetail = () => {
 
 		// Check if URL is defined
 		if (!url) {
-			alert("The URL is undefined, cannot proceed with the install.");
+			alert("The URL is undefined. This is a bug in the code, please report it.");
 			return;
 		}
 
@@ -128,7 +127,7 @@ const AppDetail = () => {
 
 	return (
 		<>
-			<TouchableOpacity
+			<Pressable
 				className="bg-[#1c1c1c] p-3"
 				onPress={() => router.back()}
 			>
@@ -137,10 +136,11 @@ const AppDetail = () => {
 						name="chevron-back-outline"
 						size={15}
 						className="text-[#4A90E2]"
+						color={"#4A90E2"}
 					/>
 					<Text className="text-[#4A90E2] ml-2">Go Back</Text>
 				</View>
-			</TouchableOpacity>
+			</Pressable>
 
 			<ScrollView className="flex-1 p-4 bg-[#1F1F1F]">
 				{app.iconURL && (
@@ -177,12 +177,12 @@ const AppDetail = () => {
 				)}
 
 				{/* Install Button */}
-				<TouchableOpacity
+				<Pressable
 					className="bg-blue-500 py-3 rounded-lg"
 					onPress={() => handleInstall(preferredMethod)}
 				>
 					<Text className="text-white text-center font-bold">GET</Text>
-				</TouchableOpacity>
+				</Pressable>
 			</ScrollView>
 		</>
 	);

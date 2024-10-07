@@ -4,7 +4,7 @@ import {
 	TextInput,
 	FlatList,
 	Text,
-	TouchableOpacity,
+	Pressable,
 	ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -60,9 +60,9 @@ const CustomReposScreen = () => {
 		return (
 			<View style={styles.repoItem}>
 				<Text style={styles.repoText}>{item}</Text>
-				<TouchableOpacity onPress={() => removeCustomRepo(item)}>
+				<Pressable onPress={() => removeCustomRepo(item)}>
 					<Text style={styles.removeButton}>Remove</Text>
-				</TouchableOpacity>
+				</Pressable>
 			</View>
 		);
 	};
@@ -77,9 +77,9 @@ const CustomReposScreen = () => {
 				value={repoUrl}
 				onChangeText={setRepoUrl}
 			/>
-			<TouchableOpacity style={styles.addButton} onPress={handleAddRepo}>
+			<Pressable style={styles.addButton} onPress={handleAddRepo}>
 				<Text style={styles.addButtonText}>Add Repository</Text>
-			</TouchableOpacity>
+			</Pressable>
 
 			<FlatList
 				data={customRepos}

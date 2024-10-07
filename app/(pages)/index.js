@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, ActivityIndicator, Image, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, Text, View, ActivityIndicator, Image, Pressable, TextInput } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false); 
   const [searchQuery, setSearchQuery] = useState('');
+
+
+  // Track pressed item state
+  const [pressedItem, setPressedItem] = useState(null);
 
   const fetchData = async (repos) => {
     setLoading(true);
@@ -76,16 +80,17 @@ export default function App() {
     }
   };
 
-  const renderAppItem = ({ item }) => {
-    const index = appsData.findIndex(app => app.bundleIdentifier === item.bundleIdentifier);
-  
+ const renderAppItem = ({ item }) => {
+    const isPressed = pressedItem === item.bundleIdentifier;
+
     return (
-      <TouchableOpacity
+      <Pressable
         style={{
           flex: 1,
           marginHorizontal: 8,
+          opacity: isPressed ? 0.5 : 1,
           marginBottom: 16,
-          backgroundColor: '#242424', // Darker background for cards
+          backgroundColor: '#242424', // Change background on press
           borderRadius: 12,
           overflow: 'hidden',
           shadowColor: '#000',
@@ -94,22 +99,31 @@ export default function App() {
           shadowRadius: 5,
           elevation: 4, // Card shadow for depth
         }}
-        onPress={() => router.push(`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`)}
+        onPressIn={() => setPressedItem(item.bundleIdentifier)} // Set pressed item
+        onPressOut={() => setPressedItem(null)} // Reset pressed item
+        onPress={() =>
+          router.push(`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`)
+        }
       >
         <View style={{ flexDirection: 'row', padding: 16, alignItems: 'center' }}>
-          <Image source={{ uri: item.iconURL }} style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }} />
+          <Image
+            source={{ uri: item.iconURL }}
+            style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }}
+          />
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 18 }}>{item.name}</Text>
+            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 18 }}>
+              {item.name}
+            </Text>
             <Text style={{ color: '#CCC', marginTop: 4 }}>Source: {item.sourceName}</Text>
             <Text style={{ color: '#888', marginTop: 4 }} numberOfLines={2}>
               {item.localizedDescription}
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
-
+  
   return (
     <View style={{ flex: 1, backgroundColor: '#121212' }}> 
       <View style={{ padding: 16, backgroundColor: '#1F1F1F' }}> 
