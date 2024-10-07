@@ -113,7 +113,7 @@ export default function App() {
   return (
     <View style={{ flex: 1, backgroundColor: '#121212' }}> 
       <View style={{ padding: 16, backgroundColor: '#1F1F1F' }}> 
-        <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 24, marginBottom: 16 }}>Fetched Apps</Text>
+        <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 24, marginBottom: 16 }}>Apps</Text>
         <TextInput
           placeholder="Search apps..."
           placeholderTextColor="#888" 
@@ -131,7 +131,7 @@ export default function App() {
           }}
         />
       </View>
-
+      <Text>{"\n"}</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#ffffff" />
       ) : (

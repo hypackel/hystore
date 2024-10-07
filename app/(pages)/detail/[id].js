@@ -5,17 +5,19 @@ import {
 	Image,
 	ActivityIndicator,
 	ScrollView,
-	Button,
 	TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { styled } from "nativewind"; // NativeWind import
 
 const AppDetail = () => {
 	const router = useRouter();
 	const { id, source } = useLocalSearchParams();
 	const [app, setApp] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [preferredMethod, setPreferredMethod] = useState("default");
 
 	const fetchAppsData = async (sourceUrl) => {
 		try {
@@ -29,6 +31,19 @@ const AppDetail = () => {
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			return [];
+		}
+	};
+
+	const getPreferredMethod = async () => {
+		try {
+			const storedMethod = await AsyncStorage.getItem("preferredMethod");
+			if (storedMethod) {
+				setPreferredMethod(storedMethod);
+			} else {
+				setPreferredMethod("default");
+			}
+		} catch (error) {
+			console.error("Error retrieving preferred method:", error);
 		}
 	};
 
@@ -46,11 +61,12 @@ const AppDetail = () => {
 		};
 
 		loadData();
+		getPreferredMethod();
 	}, [id, source]);
 
 	if (loading) {
 		return (
-			<View style={styles.loadingContainer}>
+			<View className="flex-1 justify-center items-center bg-[#44ef9a]">
 				<ActivityIndicator size="large" color="#ffffff" />
 			</View>
 		);
@@ -58,131 +74,80 @@ const AppDetail = () => {
 
 	if (!app) {
 		return (
-			<View style={styles.loadingContainer}>
-				<Text style={styles.errorText}>App not found!</Text>
-				<Button title="Go Back" onPress={() => router.back()} />
+			<View className="flex-1 justify-center items-center bg-[#44ef9a]">
+				<Text className="text-black text-xl font-bold">App not found!</Text>
+				<TouchableOpacity className="mt-4" onPress={() => router.back()}>
+					<Text className="text-blue-500">Go Back</Text>
+				</TouchableOpacity>
 			</View>
 		);
 	}
 
-	const installWithAltStore = () => {
-		const altStoreURL = `altstore://install?url=${encodeURIComponent(app.downloadURL)}`;
-		router.replace(altStoreURL);
+	// Install method handlers
+	const installMethods = {
+		altstore: `altstore://install?url=${encodeURIComponent(app.downloadURL)}`,
+		sidestore: `sidestore://source?url=${encodeURIComponent(app.downloadURL)}`,
+		trollstore: `apple-magnifier://install?url=${encodeURIComponent(app.downloadURL)}`,
+		scarlet: `scarlet://install?url=${encodeURIComponent(app.downloadURL)}`,
+		tanarasign: `opium://install=${encodeURIComponent(app.downloadURL)}`,
+		default: app.downloadURL, // Default handler or fallback
 	};
 
-	const installWithSideStore = () => {
-		const sideStoreURL = `sidestore://source?url=${encodeURIComponent(app.downloadURL)}`;
-		router.replace(sideStoreURL);
-	};
-
-	const installWithTrollStore = () => {
-		const trollStoreURL = `apple-magnifier://install?url=${encodeURIComponent(app.downloadURL)}`;
-		router.replace(trollStoreURL);
+	const handleInstall = (method) => {
+		const url = installMethods[method] || installMethods.default;
+		if (url === app.downloadURL) {
+			alert("Default Install Method");
+		} else {
+			router.replace(url);
+		}
 	};
 
 	return (
 		<>
-			<TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-				<View style={styles.backButtonContainer}>
-					<Ionicons name="chevron-back-outline" size={15} style={styles.backIcon} />
-					<Text style={styles.backText}>Go Back</Text>
+			<TouchableOpacity className="bg-[#1c1c1c] p-3" onPress={() => router.back()}>
+				<View className="flex-row items-center">
+					<Ionicons name="chevron-back-outline" size={15} className="text-[#4A90E2]" />
+					<Text className="text-[#4A90E2] ml-2">Go Back</Text>
 				</View>
 			</TouchableOpacity>
 
-			<ScrollView style={styles.container}>
+			<ScrollView className="flex-1 p-4 bg-[#1F1F1F]">
 				{app.iconURL && (
-					<Image
-						source={{ uri: app.iconURL }}
-						style={styles.appIcon}
-					/>
+					<Image source={{ uri: app.iconURL }} className="w-24 h-24 rounded-lg self-center mb-4" />
 				)}
 				{app.name && (
-					<Text style={styles.appTitle}>{app.name}</Text>
+					<Text className="text-xl font-bold text-white text-center mb-4">{app.name}</Text>
 				)}
 				{app.sourceName && (
-					<Text style={styles.appDetailText}>Source: {app.sourceName}</Text>
+					<Text className="text-gray-400 mb-2">Source: {app.sourceName}</Text>
 				)}
 				{app.version && (
-					<Text style={styles.appDetailText}>Version: {app.version}</Text>
+					<Text className="text-gray-400 mb-2">Version: {app.version}</Text>
 				)}
 				{app.bundleIdentifier && (
-					<Text style={styles.appDetailText}>Bundle Identifier: {app.bundleIdentifier}</Text>
+					<Text className="text-gray-400 mb-2">Bundle Identifier: {app.bundleIdentifier}</Text>
 				)}
 				{app.size && (
-					<Text style={styles.appDetailText}>
+					<Text className="text-gray-400 mb-2">
 						Size: {(app.size / 1024 / 1024).toFixed(2)} MB
 					</Text>
 				)}
 				{app.localizedDescription && (
-					<Text style={styles.descriptionText}>
+					<Text className="text-gray-400 mb-4">
 						Description: {app.localizedDescription}
 					</Text>
 				)}
 
-				<Button title="Install with AltStore" onPress={installWithAltStore} />
-				<Button title="Install with SideStore" onPress={installWithSideStore} />
-				<Button title="Install with TrollStore" onPress={installWithTrollStore} />
+				{/* Install Button */}
+				<TouchableOpacity
+					className="bg-blue-500 py-3 rounded-lg"
+					onPress={() => handleInstall(preferredMethod)}
+				>
+					<Text className="text-white text-center font-bold">GET</Text>
+				</TouchableOpacity>
 			</ScrollView>
 		</>
 	);
-};
-
-const styles = {
-	container: {
-		flex: 1,
-		padding: 16,
-		backgroundColor: '#1F1F1F',
-	},
-	loadingContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#44ef9a',
-	},
-	errorText: {
-		color: '#000',
-		fontSize: 24,
-		fontWeight: 'bold',
-		textAlign: 'center',
-	},
-	backButton: {
-		backgroundColor: '#1c1c1c',
-		padding: 10,
-	},
-	backButtonContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	backIcon: {
-		color: '#4A90E2',
-	},
-	backText: {
-		color: '#4A90E2',
-		marginLeft: 5,
-	},
-	appIcon: {
-		width: 96,
-		height: 96,
-		borderRadius: 12,
-		alignSelf: 'center',
-		marginBottom: 16,
-	},
-	appTitle: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		color: '#FFF',
-		textAlign: 'center',
-		marginBottom: 16,
-	},
-	appDetailText: {
-		fontSize: 16,
-		color: '#BBB',
-		marginBottom: 8,
-	},
-	descriptionText: {
-		color: '#AAA',
-		marginBottom: 16,
-	},
 };
 
 export default AppDetail;

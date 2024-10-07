@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function RootLayout() {
 	return (
@@ -41,6 +42,26 @@ export default function RootLayout() {
 					),
 					tabBarLabel: "Repos",
 					tabBarActiveTintColor: "#34d8ff",
+					headerTitle: "",
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: "#1c1c1c",  // Match the background color
+						elevation: 0,
+						shadowOpacity: 0,
+						borderBottomWidth: 0,
+						height: 40,  // Make the header smaller
+					},
+				}}
+			/>
+			<Tabs.Screen
+				name="settings"
+				options={{
+					href: "/settings",  // Explicitly set the href
+					tabBarIcon: ({ color }) => (
+						<AntDesign name="setting" size={24} color={color} />
+					),
+					tabBarLabel: "Settings",
+					tabBarActiveTintColor: "#44ef9a",
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
