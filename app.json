@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "expotestcaseuno",
-    "slug": "expotestcaseuno",
+    "name": "HyStore",
+    "slug": "hypackel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,13 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hypackel.expotestcaseone"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "bundleIdentifier": "com.ios.hypackel.hystore"
     },
     "web": {
       "output": "server",
@@ -29,6 +23,18 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "41ce095e-80d7-461e-80d4-9777403dc522"
+      }
+    },
+    "owner": "hypackel1",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/41ce095e-80d7-461e-80d4-9777403dc522"
+    }
   }
 }
