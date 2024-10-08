@@ -1,6 +1,6 @@
 # HyStore
 
-Welcome to HyStore. Ill rite this later or @CodingKitten-YT will?
+Welcome to HyStore. A ui for browsing altstore repositories and installing apps from them. This is a hobby project from Hypackel and CodingKitten. Use it if you want idk ¯\_(ツ)_/¯
 
 ## How to Build an .ipa
 
