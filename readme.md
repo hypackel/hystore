@@ -1,6 +1,8 @@
-# HyStore
+# <center><img style="width: 2rem;margin-top: 200px;border-radius: 5px;" src="https://raw.githubusercontent.com/CodingKitten-YT/KittenStore/main/assets/img/250icon.png"></center> KittenStore
 
-Welcome to HyStore. A ui for browsing altstore repositories and installing apps from them. This is a hobby project from Hypackel and CodingKitten. Use it if you want idk ¯\_(ツ)_/¯
+Welcome to **HyStore**!
+
+HyStore is a clean and ad-free app for browsing altstore library's and installing apps from them.
 
 ## How to Build an .ipa
 
