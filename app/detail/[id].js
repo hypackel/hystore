@@ -268,31 +268,6 @@ const AppDetail = () => {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#F0F0F0",
-	},
-	scrollContainer: {
-		paddingHorizontal: 16,
-		paddingBottom: 50,
-	},
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginVertical: 10,
-	},
-	backButton: {
-		padding: 10,
-	},
-	backButtonText: {
-		fontSize: 20,
-		color: "#888",
-	},
-	timeText: {
-		fontSize: 16,
-		color: "#888",
-	},
 	appInfo: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -325,39 +300,6 @@ const styles = StyleSheet.create({
 	freeButtonText: {
 		color: "#fff",
 		fontWeight: "bold",
-	},
-	descriptionText: {
-		fontSize: 16,
-		fontWeight: "bold",
-		marginVertical: 10,
-		textAlign: "center",
-	},
-	gamePreview: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		marginBottom: 20,
-	},
-	gameImage: {
-		width: 150,
-		height: 250,
-		borderRadius: 10,
-	},
-	appDescription: {
-		fontSize: 14,
-		color: "#666",
-		textAlign: "center",
-		marginBottom: 20,
-	},
-	bottomNav: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		borderTopWidth: 1,
-		borderColor: "#ddd",
-		paddingVertical: 10,
-	},
-	navText: {
-		fontSize: 14,
-		color: "#888",
 	},
 	descriptionContainer: {
 		backgroundColor: "#1F1F1F", // Gray background
