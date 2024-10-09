@@ -5,8 +5,8 @@ import {
 	FlatList,
 	Text,
 	Pressable,
-	ScrollView,
 } from "react-native";
+import { EventRegister } from "react-native-event-listeners";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DEFAULT_REPOS = [
@@ -46,6 +46,7 @@ const CustomReposScreen = () => {
 		setCustomRepos(updatedRepos);
 		await AsyncStorage.setItem("customRepos", JSON.stringify(updatedRepos));
 		console.log(`Added custom repo: ${url}`);
+		
 		fetchAndDisplayCustomRepos();
 		reloadApps();
 	};
@@ -67,7 +68,7 @@ const CustomReposScreen = () => {
 	};
 
 	const reloadApps = () => {
-		// Implement your logic to reload apps here, if necessary
+		EventRegister.emit('customReposChanged');
 	};
 
 	const handleAddRepo = () => {

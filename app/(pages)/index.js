@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { EventRegister } from "react-native-event-listeners";
 
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 	const [appsData, setAppsData] = useState([]);
@@ -57,13 +59,27 @@ export default function App() {
 		return JSON.parse(customReposJson) || [];
 	};
 
-	useEffect(() => {
-		const loadData = async () => {
-			const repos = await loadCustomRepos();
-			fetchData(repos);
-		};
-		loadData();
-	}, []);
+  useEffect(() => {
+    // Load initial data
+    const loadData = async () => {
+      const repos = await loadCustomRepos();
+      fetchData(repos);
+    };
+    loadData();
+  
+    // Listen for AsyncStorage changes and refetch data
+    const subscription = EventRegister.addEventListener('customReposChanged', async () => {
+      const repos = await loadCustomRepos();
+      fetchData(repos);
+    });
+  
+    // Cleanup the event listener
+    return () => {
+      EventRegister.removeEventListener(subscription);
+    };
+  }, []);
+  
+  
 
 	const onRefresh = async () => {
 		setRefreshing(true);
