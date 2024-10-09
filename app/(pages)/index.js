@@ -11,8 +11,6 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { EventRegister } from "react-native-event-listeners";
-
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
@@ -22,8 +20,24 @@ export default function App() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	// Track pressed item state
+  	// Track pressed item state
 	const [pressedItem, setPressedItem] = useState(null);
+
+	// Default repos to add on first launch
+	const defaultRepos = [
+		'https://community-apps.sidestore.io/sidecommunity.json',
+		'https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json',
+		'https://tiny.one/SpotC',
+		'https://repo.apptesters.org',
+		'https://randomblock1.com/altstore/apps.json',
+		'https://qnblackcat.github.io/AltStore/apps.json',
+		'https://esign.yyyue.xyz/app.json',
+		'https://bit.ly/wuxuslibraryplus',
+		'https://bit.ly/wuxuslibrary',
+		"https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
+		"https://quarksources.github.io/dist/quantumsource.min.json",
+		"https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
+	];
 
 	const fetchData = async (repos) => {
 		setLoading(true);
@@ -59,27 +73,37 @@ export default function App() {
 		return JSON.parse(customReposJson) || [];
 	};
 
-  useEffect(() => {
-    // Load initial data
-    const loadData = async () => {
-      const repos = await loadCustomRepos();
-      fetchData(repos);
-    };
-    loadData();
-  
-    // Listen for AsyncStorage changes and refetch data
-    const subscription = EventRegister.addEventListener('customReposChanged', async () => {
-      const repos = await loadCustomRepos();
-      fetchData(repos);
-    });
-  
-    // Cleanup the event listener
-    return () => {
-      EventRegister.removeEventListener(subscription);
-    };
-  }, []);
-  
-  
+	const saveCustomRepos = async (repos) => {
+		await AsyncStorage.setItem("customRepos", JSON.stringify(repos));
+	};
+
+	useEffect(() => {
+		const loadData = async () => {
+			// Check if customRepos exists in AsyncStorage
+			const customReposJson = await AsyncStorage.getItem("customRepos");
+
+			// If no customRepos, it means this is the first launch, so add the default repos
+			if (!customReposJson) {
+				await saveCustomRepos(defaultRepos);
+			}
+
+			// Load the repos (whether they're default or custom ones)
+			const repos = await loadCustomRepos();
+			fetchData(repos);
+		};
+		loadData();
+
+		// Listen for AsyncStorage changes and refetch data
+		const subscription = EventRegister.addEventListener('customReposChanged', async () => {
+			const repos = await loadCustomRepos();
+			fetchData(repos);
+		});
+
+		// Cleanup the event listener
+		return () => {
+			EventRegister.removeEventListener(subscription);
+		};
+	}, []);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
