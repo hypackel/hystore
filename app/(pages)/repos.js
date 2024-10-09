@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from "react";
-import {
-	View,
-	TextInput,
-	FlatList,
-	Text,
-	Pressable,
-} from "react-native";
+import { View, TextInput, FlatList, Text, Pressable } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DEFAULT_REPOS = [
-  'https://community-apps.sidestore.io/sidecommunity.json',
-  'https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json',
-  'https://tiny.one/SpotC',
-  'https://repo.apptesters.org',
-  'https://randomblock1.com/altstore/apps.json',
-  'https://qnblackcat.github.io/AltStore/apps.json',
-  'https://esign.yyyue.xyz/app.json',
-  'https://bit.ly/wuxuslibraryplus',
-  'https://bit.ly/wuxuslibrary',
-  "https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
-  "https://quarksources.github.io/dist/quantumsource.min.json",
-  "https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
+	"https://community-apps.sidestore.io/sidecommunity.json",
+	"https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json",
+	"https://tiny.one/SpotC",
+	"https://repo.apptesters.org",
+	"https://randomblock1.com/altstore/apps.json",
+	"https://qnblackcat.github.io/AltStore/apps.json",
+	"https://esign.yyyue.xyz/app.json",
+	"https://bit.ly/wuxuslibraryplus",
+	"https://bit.ly/wuxuslibrary",
+	"https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
+	"https://quarksources.github.io/dist/quantumsource.min.json",
+	"https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
 ];
 
 const CustomReposScreen = () => {
 	const [repoUrl, setRepoUrl] = useState("");
 	const [customRepos, setCustomRepos] = useState([]);
+	const [addButtonPressed, setAddButtonPressed] = useState(null);
+	const [resetButtonPressed, setResetButtonPressed] = useState(null);
 
 	useEffect(() => {
 		fetchAndDisplayCustomRepos();
@@ -46,7 +42,7 @@ const CustomReposScreen = () => {
 		setCustomRepos(updatedRepos);
 		await AsyncStorage.setItem("customRepos", JSON.stringify(updatedRepos));
 		console.log(`Added custom repo: ${url}`);
-		
+
 		fetchAndDisplayCustomRepos();
 		reloadApps();
 	};
@@ -68,7 +64,7 @@ const CustomReposScreen = () => {
 	};
 
 	const reloadApps = () => {
-		EventRegister.emit('customReposChanged');
+		EventRegister.emit("customReposChanged");
 	};
 
 	const handleAddRepo = () => {
@@ -81,109 +77,57 @@ const CustomReposScreen = () => {
 
 	const renderRepoItem = ({ item }) => {
 		return (
-			<View style={styles.repoItem}>
-				<Text style={styles.repoText}>{item}</Text>
+			<View className="flex-row justify-between items-center p-3 bg-gray-800 rounded-lg mb-2">
+				<Text className="text-white text-base">{item}</Text>
 				<Pressable onPress={() => removeCustomRepo(item)}>
-					<Text style={styles.removeButton}>Remove</Text>
+					<Text className="text-red-500 font-bold">Remove</Text>
 				</Pressable>
 			</View>
 		);
 	};
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Custom Repos</Text>
+		<View className="flex-1 p-4 bg-zinc-900">
+			<Text className="text-3xl font-extrabold text-white mb-4">
+				Repositories
+			</Text>
 			<TextInput
-				style={styles.input}
+				className="h-10 border border-zinc-700 rounded-lg px-3 bg-zinc-800 text-white mb-4"
 				placeholder="Add new repository URL"
 				placeholderTextColor="#888"
 				value={repoUrl}
 				onChangeText={setRepoUrl}
 			/>
-			<Pressable style={styles.addButton} onPress={handleAddRepo}>
-				<Text style={styles.addButtonText}>Add Repository</Text>
+			<Pressable
+				onPressIn={() => setAddButtonPressed(true)}
+				onPressOut={() => setAddButtonPressed(null)}
+				className={`bg-blue-500 p-3 rounded-lg items-center mb-4 ${
+					addButtonPressed ? "opacity-50" : "opacity-100"
+				}`}
+				onPress={handleAddRepo}
+			>
+				<Text className="text-white text-base font-bold">Add Repository</Text>
 			</Pressable>
 
-			<Pressable style={styles.resetButton} onPress={resetToDefaultRepos}>
-				<Text style={styles.resetButtonText}>Reset to Default</Text>
+			<Pressable
+				onPressIn={() => setResetButtonPressed(true)}
+				onPressOut={() => setResetButtonPressed(null)}
+				className={`bg-red-500 p-3 rounded-lg items-center mb-4 ${
+					resetButtonPressed ? "opacity-50" : "opacity-100"
+				}`}
+				onPress={resetToDefaultRepos}
+			>
+				<Text className="text-white text-base font-bold">Reset to Default</Text>
 			</Pressable>
 
 			<FlatList
 				data={customRepos}
 				renderItem={renderRepoItem}
 				keyExtractor={(item) => item}
-				style={styles.repoList}
+				className="mt-4"
 			/>
 		</View>
 	);
-};
-
-const styles = {
-	container: {
-		flex: 1,
-		padding: 16,
-		backgroundColor: '#1F1F1F',
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		color: '#FFF',
-		marginBottom: 16,
-	},
-	input: {
-		height: 40,
-		borderColor: '#444',
-		borderWidth: 1,
-		borderRadius: 8,
-		paddingHorizontal: 10,
-		backgroundColor: '#2C2C2C',
-		color: '#FFF',
-		marginBottom: 16,
-	},
-	addButton: {
-		backgroundColor: '#4A90E2',
-		padding: 12,
-		borderRadius: 8,
-		alignItems: 'center',
-		marginBottom: 16,
-	},
-	addButtonText: {
-		color: '#FFF',
-		fontSize: 16,
-		fontWeight: 'bold',
-	},
-	resetButton: {
-		backgroundColor: '#FF6B6B',
-		padding: 12,
-		borderRadius: 8,
-		alignItems: 'center',
-		marginBottom: 16,
-	},
-	resetButtonText: {
-		color: '#FFF',
-		fontSize: 16,
-		fontWeight: 'bold',
-	},
-	repoList: {
-		marginTop: 16,
-	},
-	repoItem: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		padding: 10,
-		backgroundColor: '#2C2C2C',
-		borderRadius: 8,
-		marginBottom: 8,
-	},
-	repoText: {
-		color: '#FFF',
-		fontSize: 16,
-	},
-	removeButton: {
-		color: '#FF6B6B',
-		fontWeight: 'bold',
-	},
 };
 
 export default CustomReposScreen;
