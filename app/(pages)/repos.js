@@ -9,6 +9,21 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const DEFAULT_REPOS = [
+  'https://community-apps.sidestore.io/sidecommunity.json',
+  'https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json',
+  'https://tiny.one/SpotC',
+  'https://repo.apptesters.org',
+  'https://randomblock1.com/altstore/apps.json',
+  'https://qnblackcat.github.io/AltStore/apps.json',
+  'https://esign.yyyue.xyz/app.json',
+  'https://bit.ly/wuxuslibraryplus',
+  'https://bit.ly/wuxuslibrary',
+  "https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
+  "https://quarksources.github.io/dist/quantumsource.min.json",
+  "https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
+];
+
 const CustomReposScreen = () => {
 	const [repoUrl, setRepoUrl] = useState("");
 	const [customRepos, setCustomRepos] = useState([]);
@@ -41,6 +56,13 @@ const CustomReposScreen = () => {
 		await AsyncStorage.setItem("customRepos", JSON.stringify(updatedRepos));
 		console.log(`Removed custom repo: ${url}`);
 		fetchAndDisplayCustomRepos();
+		reloadApps();
+	};
+
+	const resetToDefaultRepos = async () => {
+		setCustomRepos(DEFAULT_REPOS);
+		await AsyncStorage.setItem("customRepos", JSON.stringify(DEFAULT_REPOS));
+		console.log("Reset to default repos");
 		reloadApps();
 	};
 
@@ -79,6 +101,10 @@ const CustomReposScreen = () => {
 			/>
 			<Pressable style={styles.addButton} onPress={handleAddRepo}>
 				<Text style={styles.addButtonText}>Add Repository</Text>
+			</Pressable>
+
+			<Pressable style={styles.resetButton} onPress={resetToDefaultRepos}>
+				<Text style={styles.resetButtonText}>Reset to Default</Text>
 			</Pressable>
 
 			<FlatList
@@ -121,6 +147,18 @@ const styles = {
 		marginBottom: 16,
 	},
 	addButtonText: {
+		color: '#FFF',
+		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	resetButton: {
+		backgroundColor: '#FF6B6B',
+		padding: 12,
+		borderRadius: 8,
+		alignItems: 'center',
+		marginBottom: 16,
+	},
+	resetButtonText: {
 		color: '#FFF',
 		fontSize: 16,
 		fontWeight: 'bold',

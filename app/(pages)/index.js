@@ -12,20 +12,6 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const defaultUrls = [
-  'https://community-apps.sidestore.io/sidecommunity.json',
-  'https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json',
-  'https://tiny.one/SpotC',
-  'https://repo.apptesters.org',
-  'https://randomblock1.com/altstore/apps.json',
-  'https://qnblackcat.github.io/AltStore/apps.json',
-  'https://esign.yyyue.xyz/app.json',
-  'https://bit.ly/wuxuslibraryplus',
-  'https://bit.ly/wuxuslibrary',
-	"https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
-	"https://quarksources.github.io/dist/quantumsource.min.json",
-	"https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
-];
 
 export default function App() {
 	const [appsData, setAppsData] = useState([]);
@@ -40,7 +26,7 @@ export default function App() {
 	const fetchData = async (repos) => {
 		setLoading(true);
 		try {
-			const urls = [...repos, ...defaultUrls];
+			const urls = [...repos];
 			const fetchedData = await Promise.all(
 				urls.map(async (url) => {
 					const response = await fetch(url);

@@ -73,23 +73,7 @@ export default function RootLayout() {
 					},
 				}}
 			/>
-			<Tabs.Screen
-				name="detail/[id]"
-				options={{
-					href: null,  // Set href to null to hide from tab bar
-					headerTitle: "",
-					tabBarLabel: "Repos",
-					tabBarActiveTintColor: "#44ef9a",
-					headerStyle: {
-						backgroundColor: "#1c1c1c",  // Match the background color
-						elevation: 0,
-						shadowOpacity: 0,
-						borderBottomWidth: 0,
-						height: 40,  // Make the header smaller
-					},
-					headerShown: true,  // Optionally hide the header for this screen
-				}}
-			/>
+		
 		</Tabs>
 	);
 }
