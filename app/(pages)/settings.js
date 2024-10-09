@@ -7,7 +7,7 @@ export default function App() {
 	const [pressedMethod, setPressedMethod] = useState(null);
 
 	const options = [
-		{ id: "default", label: "Default" },
+		{ id: "default", label: "Default (download)" },
 		{ id: "trollstore", label: "TrollStore" },
 		{ id: "sidestore", label: "SideStore" },
 		{ id: "scarlet", label: "Scarlet" },
@@ -35,7 +35,7 @@ export default function App() {
 		<ScrollView className="flex-1 bg-[#1F1F1F] text-white p-4">
 			<Text className="text-xl font-bold mb-2 text-white">Download Method</Text>
 			<Text className="text-md mb-4 text-gray-500">
-				What app should HyStore use to download apps
+				What app should HyStore use to download apps. App restart is required.
 			</Text>
 
 			<View className="space-y-4 flex flex-row flex-wrap justify-between">

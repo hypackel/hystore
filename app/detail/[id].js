@@ -127,7 +127,7 @@ const AppDetail = () => {
 
 	return (
 		<>
-			<Pressable
+			{/* <Pressable
 				className="bg-[#1c1c1c] p-3"
 				onPress={() => router.back()}
 			>
@@ -140,7 +140,7 @@ const AppDetail = () => {
 					/>
 					<Text className="text-[#4A90E2] ml-2">Go Back</Text>
 				</View>
-			</Pressable>
+			</Pressable> */}
 
 			<ScrollView className="flex-1 p-4 bg-[#1F1F1F]">
 				{app.iconURL && (
