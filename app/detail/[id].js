@@ -168,7 +168,7 @@ const AppDetail = () => {
 
 				{/* Blurred App Icon Section */}
 				{app.iconURL && (
-					<View className="relative w-screen h-60 m-0 p-0 overflow-hidden">
+					<View className="relative w-screen h-72 m-0 p-0 overflow-hidden">
 						{/* Blurred background */}
 						<BlurView intensity={100}>
 							<Image
@@ -185,54 +185,60 @@ const AppDetail = () => {
 					</View>
 				)}
 
-				{app.localizedDescription && (
-					<Text className="text-white text-center my-4">
-						{app.localizedDescription}
-					</Text>
-				)}
+				<View style={styles.descriptionContainer}>
+					{app.localizedDescription && (
+						<Text className="text-white text-center my-4">
+							{app.localizedDescription}
+						</Text>
+					)}
 
-				{/* Screenshot Thumbnails */}
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					className="mb-11"
-				>
-					<View className="flex-row justify-center space-x-2">
-						{app.screenshotURLs?.map((url, index) => (
-							<Pressable
-								key={index}
-								className="mx-4"
-								onPress={() => openModal(url)}
-							>
-								<View className="p-2">
-									<Image
-										source={{ uri: url }}
-										className="w-[330px] h-[500px] object-contain rounded-lg" // Adjust width and height as needed
-										resizeMode="contain" // Ensure the image scales properly
-									/>
-								</View>
-							</Pressable>
-						))}
-					</View>
-				</ScrollView>
+					{/* Screenshot Thumbnails */}
+					<ScrollView
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						className="mb-11"
+					>
+						<View className="flex-row justify-center space-x-2">
+							{app.screenshotURLs?.map((url, index) => (
+								<Pressable
+									key={index}
+									className="mx-4"
+									onPress={() => openModal(url)}
+								>
+									<View
+										className="p-2"
+										style={styles.imageContainer} // Apply shadow and corner styles here
+									>
+										<Image
+											source={{ uri: url }}
+											className="w-[330px] h-[500px] object-contain rounded-lg" // Adjust width and height as needed
+											resizeMode="contain"
+											style={styles.screenshotImage} // Add border radius here
+										/>
+									</View>
+								</Pressable>
+							))}
+						</View>
+					</ScrollView>
 
-				{app.sourceName && (
-					<Text className="text-gray-400 mb-2">Source: {app.sourceName}</Text>
-				)}
-				{app.version && (
-					<Text className="text-gray-400 mb-2">Version: {app.version}</Text>
-				)}
-				{app.bundleIdentifier && (
-					<Text className="text-gray-400 mb-2">
-						Bundle Identifier: {app.bundleIdentifier}
-					</Text>
-				)}
-				{app.size && (
-					<Text className="text-gray-400 mb-5">
-						Size: {(app.size / 1024 / 1024).toFixed(2)} MB
-						{"\n\n\n\n"}
-					</Text>
-				)}
+					{app.sourceName && (
+						<Text className="text-gray-400 mb-2">Source: {app.sourceName}</Text>
+					)}
+					{app.version && (
+						<Text className="text-gray-400 mb-2">Version: {app.version}</Text>
+					)}
+					{app.bundleIdentifier && (
+						<Text className="text-gray-400 mb-2">
+							Bundle Identifier: {app.bundleIdentifier}
+						</Text>
+					)}
+					{app.size && (
+						<Text className="text-gray-400 mb-5">
+							Size: {(app.size / 1024 / 1024).toFixed(2)} MB
+							{"\n\n\n\n"}
+						</Text>
+					)}
+				</View>
 			</ScrollView>
 
 			{/* Modal for full-screen image */}
@@ -353,6 +359,18 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: "#888",
 	},
+	descriptionContainer: {
+		backgroundColor: "#1F1F1F", // Gray background
+		padding: 20,
+		borderTopLeftRadius: 30, // Rounded top-left corner
+		borderTopRightRadius: 30, // Rounded top-right corner
+		shadowColor: "#000", // Shadow for floating effect
+		shadowOffset: { width: 0, height: -6 }, // Only top shadow
+		shadowOpacity: 0.2,
+		shadowRadius: 10,
+		elevation: 4, // For Android shadow
+		marginTop: -30, // Slight overlap to hide the edge between sections
+	  },
 });
 
 export default AppDetail;
