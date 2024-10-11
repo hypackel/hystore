@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function RootLayout() {
 	return (
@@ -33,6 +34,28 @@ export default function RootLayout() {
 					},
 				}}
 			/>
+
+			<Tabs.Screen
+				name="news"
+				options={{
+					href: "/news",
+					tabBarIcon: ({ color }) => (
+						<FontAwesome name="newspaper-o" size={24} color={color} />
+					),
+					tabBarLabel: "News",
+					tabBarActiveTintColor: "#ef44ef",
+					headerTitle: "",
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: "#1c1c1c",  // Match the background color
+						elevation: 0,
+						shadowOpacity: 0,
+						borderBottomWidth: 0,
+						height: 40,  // Make the header smaller
+					},
+				}}
+			/>
+
 			<Tabs.Screen
 				name="repos"
 				options={{
