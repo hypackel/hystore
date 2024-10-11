@@ -1,4 +1,4 @@
-# <center><img style="width: 2rem;margin-top: 200px;border-radius: 5px;" src="https://raw.githubusercontent.com/CodingKitten-YT/KittenStore/main/assets/img/250icon.png"></center> KittenStore
+# <center><img style="width: 2rem;margin-top: 200px;border-radius: 5px;" src="https://raw.githubusercontent.com/hypackel/hystore/refs/heads/main/assets/icon.png"></center> HyStore
 
 Welcome to **HyStore**!
 
