@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Image, ActivityIndicator, Linking } from 'react-native';
 
 const defaultRepos = [
   'https://community-apps.sidestore.io/sidecommunity.json',
@@ -32,6 +32,10 @@ const NewsSection = () => {
             allNews = [...allNews, ...data.news]; // Collect news articles
           }
         }
+
+        // Sort news by date, newest first
+        allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         setNews(allNews);
       } catch (error) {
         console.error('Error fetching news:', error);
