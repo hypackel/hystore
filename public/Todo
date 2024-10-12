@@ -1,5 +1,8 @@
-- add placeholder image when failed to load
-- add sorting by type
+- add placeholder image when failed to load DONE
+- add sorting by type, date
+- themes (dark, light)
+- finish readme (add the node binary step)
+- fix web/ make it look nicer
 - when clicking on a source, show all apps from that source
 
 

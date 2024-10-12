@@ -14,7 +14,7 @@ import {
 import { BlurView } from "expo-blur";
 import FallbackImage from "../components/DetailFallback";
 import { Image } from "expo-image";
-import * as RNImage from 'react-native';
+import * as RNImage from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -142,10 +142,10 @@ const AppDetail = () => {
 
 	return (
 		<>
-			<ScrollView className="flex-1 bg-[#1F1F1F]">
+			<ScrollView className="flex-1 bg-[#1F1F1F]"> 
 				{/* App info */}
 				<View className="relative z-30">
-					<View className="absolute right-0 m-2 mt-20 px-4 py-[0.5] bg-[#1F1F1F] rounded-2xl z-30 shadow-md w-full max-w-[96.5%]">
+					<View className="absolute right-0 m-2 top-[95px] px-4 py-[0.5] bg-[#1f1f1fc4] rounded-2xl z-30 shadow-md w-full max-w-[96.5%]">
 						<View style={styles.appInfo}>
 							{app.iconURL && (
 								<FallbackImage
