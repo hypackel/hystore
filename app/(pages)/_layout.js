@@ -1,8 +1,8 @@
 import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function RootLayout() {
 	return (
@@ -17,7 +17,7 @@ export default function RootLayout() {
 			<Tabs.Screen
 				name="index"
 				options={{
-					href: "/",  // Explicitly set the href
+					href: "/", // Explicitly set the href
 					tabBarIcon: ({ color }) => (
 						<Feather name="home" color={color} size={24} />
 					),
@@ -26,11 +26,11 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#1c1c1c",  // Change to match the tab bar color
+						backgroundColor: "#1c1c1c", // Change to match the tab bar color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
-						height: 40,  // Make the header smaller by setting a smaller height
+						height: 40, // Make the header smaller by setting a smaller height
 					},
 				}}
 			/>
@@ -38,7 +38,7 @@ export default function RootLayout() {
 			<Tabs.Screen
 				name="news"
 				options={{
-					href: "/news",
+					// href: "/news",
 					tabBarIcon: ({ color }) => (
 						<FontAwesome name="newspaper-o" size={24} color={color} />
 					),
@@ -47,19 +47,20 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#1c1c1c",  // Match the background color
+						backgroundColor: "#1c1c1c", // Match the background color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
-						height: 40,  // Make the header smaller
+						height: 40, // Make the header smaller
 					},
+					tabBarButton: () => null, // Hide the tab button
 				}}
 			/>
 
 			<Tabs.Screen
 				name="repos"
 				options={{
-					href: "/repos",  // Explicitly set the href
+					href: "/repos", // Explicitly set the href
 					tabBarIcon: ({ color }) => (
 						<FontAwesome6 color={color} name="folder-open" size={24} />
 					),
@@ -68,18 +69,18 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#1c1c1c",  // Match the background color
+						backgroundColor: "#1c1c1c", // Match the background color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
-						height: 40,  // Make the header smaller
+						height: 40, // Make the header smaller
 					},
 				}}
 			/>
 			<Tabs.Screen
 				name="settings"
 				options={{
-					href: "/settings",  // Explicitly set the href
+					href: "/settings", // Explicitly set the href
 					tabBarIcon: ({ color }) => (
 						<AntDesign name="setting" size={24} color={color} />
 					),
@@ -88,15 +89,14 @@ export default function RootLayout() {
 					headerTitle: "",
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: "#1c1c1c",  // Match the background color
+						backgroundColor: "#1c1c1c", // Match the background color
 						elevation: 0,
 						shadowOpacity: 0,
 						borderBottomWidth: 0,
-						height: 40,  // Make the header smaller
+						height: 40, // Make the header smaller
 					},
 				}}
 			/>
-		
 		</Tabs>
 	);
 }

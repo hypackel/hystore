@@ -9,6 +9,7 @@ import {
 	TextInput,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import AppItemImage from "../components/AppIcon";
 import { router } from "expo-router";
 import { EventRegister } from "react-native-event-listeners";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,20 +21,20 @@ export default function App() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 
-  	// Track pressed item state
+	// Track pressed item state
 	const [pressedItem, setPressedItem] = useState(null);
 
 	// Default repos to add on first launch
 	const defaultRepos = [
-		'https://community-apps.sidestore.io/sidecommunity.json',
-		'https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json',
-		'https://tiny.one/SpotC',
-		'https://repo.apptesters.org',
-		'https://randomblock1.com/altstore/apps.json',
-		'https://qnblackcat.github.io/AltStore/apps.json',
-		'https://esign.yyyue.xyz/app.json',
-		'https://bit.ly/wuxuslibraryplus',
-		'https://bit.ly/wuxuslibrary',
+		"https://community-apps.sidestore.io/sidecommunity.json",
+		"https://corsproxy.io/?https%3A%2F%2Fraw.githubusercontent.com%2FBalackburn%2FYTLitePlusAltstore%2Fmain%2Fapps.json",
+		"https://tiny.one/SpotC",
+		"https://repo.apptesters.org",
+		"https://randomblock1.com/altstore/apps.json",
+		"https://qnblackcat.github.io/AltStore/apps.json",
+		"https://corsproxy.io/?https://esign.yyyue.xyz/app.json",
+		"https://corsproxy.io/?https://wuxu1.github.io/wuxu-complete-plus.json",
+		"https://corsproxy.io/?https%3A%2F%2Fwuxu1.github.io%2Fwuxu-complete.json",
 		"https://raw.githubusercontent.com/vizunchik/AltStoreRus/master/apps.json",
 		"https://quarksources.github.io/dist/quantumsource.min.json",
 		"https://corsproxy.io/?https%3A%2F%2Fipa.cypwn.xyz%2Fcypwn.json",
@@ -94,10 +95,13 @@ export default function App() {
 		loadData();
 
 		// Listen for AsyncStorage changes and refetch data
-		const subscription = EventRegister.addEventListener('customReposChanged', async () => {
-			const repos = await loadCustomRepos();
-			fetchData(repos);
-		});
+		const subscription = EventRegister.addEventListener(
+			"customReposChanged",
+			async () => {
+				const repos = await loadCustomRepos();
+				fetchData(repos);
+			},
+		);
 
 		// Cleanup the event listener
 		return () => {
@@ -124,7 +128,7 @@ export default function App() {
 	};
 
 	const renderAppItem = ({ item }) => {
-		const isPressed = pressedItem === item.bundleIdentifier;
+		const isPressed = pressedItem === item.bundleIdentifier+item.sourceUrl;
 
 		return (
 			<Pressable
@@ -142,7 +146,7 @@ export default function App() {
 					shadowRadius: 5,
 					elevation: 4, // Card shadow for depth
 				}}
-				onPressIn={() => setPressedItem(item.bundleIdentifier)} // Set pressed item
+				onPressIn={() => setPressedItem(item.bundleIdentifier+item.sourceUrl)} // Set pressed item
 				onPressOut={() => setPressedItem(null)} // Reset pressed item
 				onPress={() =>
 					router.push(
@@ -153,10 +157,8 @@ export default function App() {
 				<View
 					style={{ flexDirection: "row", padding: 16, alignItems: "center" }}
 				>
-					<Image
-						source={{ uri: item.iconURL }}
-						style={{ borderRadius: 8, width: 64, height: 64, marginRight: 16 }}
-					/>
+					<AppItemImage iconURL={item.iconURL} />
+
 					<View style={{ flex: 1 }}>
 						<Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 18 }}>
 							{item.name}

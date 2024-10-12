@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ios.hypackel.hystore"
+      "bundleIdentifier": "com.ios.hypackel.hystore",
+      "infoPlist": {
+        "UIBlurEffectStyle": "dark"  // Set this to the desired style
+      }
     },
     "web": {
       "output": "single",

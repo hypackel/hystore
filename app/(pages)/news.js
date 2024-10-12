@@ -60,7 +60,7 @@ const NewsSection = () => {
     <ScrollView className="p-4 bg-zinc-900">
       <Text className="text-2xl font-bold text-white mb-4">Latest News</Text>
       {news.map((item, index) => (
-        <View key={index} className="mb-6">
+        <View key={item+Math.random()} className="mb-6">
           <Text className="text-xl font-bold text-white mb-2">{item.title}</Text>
           {item.imageURL && (
             <Image

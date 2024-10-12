@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
-	Image,
 	ActivityIndicator,
 	ScrollView,
 	Pressable,
 	StyleSheet,
 	Linking,
 	Modal,
-	FlatList,
 	TouchableOpacity,
+	Platform,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import FallbackImage from "../components/DetailFallback";
+import { Image } from "expo-image";
+import * as RNImage from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { BlurView } from "expo-blur";
 
 const AppDetail = () => {
 	const router = useRouter();
@@ -143,10 +145,13 @@ const AppDetail = () => {
 			<ScrollView className="flex-1 bg-[#1F1F1F]">
 				{/* App info */}
 				<View className="relative z-30">
-					<View className="absolute right-0 m-2 mt-20 p-4 bg-[#1F1F1F] rounded-lg z-30 shadow-md w-full max-w-[96.5%]">
+					<View className="absolute right-0 m-2 mt-20 px-4 py-[0.5] bg-[#1F1F1F] rounded-2xl z-30 shadow-md w-full max-w-[96.5%]">
 						<View style={styles.appInfo}>
 							{app.iconURL && (
-								<Image source={{ uri: app.iconURL }} style={styles.appIcon} />
+								<FallbackImage
+									iconURL={{ uri: app.iconURL }}
+									style={styles.appIcon}
+								/>
 							)}
 							<View style={styles.appDetails}>
 								{app.name && <Text style={styles.appTitle}>{app.name}</Text>}
@@ -170,16 +175,28 @@ const AppDetail = () => {
 				{app.iconURL && (
 					<View className="relative w-screen h-72 m-0 p-0 overflow-hidden">
 						{/* Blurred background */}
-						<BlurView intensity={100}>
+						{Platform.OS === "ios" ? (
+							<>
+								<RNImage.Image
+									source={{ uri: app.iconURL }}
+									style={{
+										resizeMode: "cover",
+										height: "100%",
+									}}
+									blurRadius={4}
+								/>
+								{/* <BlurView intensity={50} style={{ height: "100%" }} /> */}
+							</>
+						) : (
 							<Image
 								source={{ uri: app.iconURL }}
 								style={{
 									resizeMode: "cover",
 									height: "100%",
 								}}
-								blurRadius={2}
+								blurRadius={20} // For Android
 							/>
-						</BlurView>
+						)}
 
 						{/* Centered clear icon */}
 					</View>
@@ -198,7 +215,7 @@ const AppDetail = () => {
 						showsHorizontalScrollIndicator={false}
 						className="mb-11"
 					>
-						<View className="flex-row justify-center space-x-2">
+						<View className="flex-row justify-center space-x-1">
 							{app.screenshotURLs?.map((url, index) => (
 								<Pressable
 									key={index}
@@ -209,7 +226,7 @@ const AppDetail = () => {
 										className="p-2"
 										style={styles.imageContainer} // Apply shadow and corner styles here
 									>
-										<Image
+										<RNImage.Image
 											source={{ uri: url }}
 											className="w-[330px] h-[500px] object-contain rounded-lg" // Adjust width and height as needed
 											resizeMode="contain"
@@ -274,8 +291,8 @@ const styles = StyleSheet.create({
 		marginVertical: 20,
 	},
 	appIcon: {
-		width: 50,
-		height: 50,
+		width: 65,
+		height: 65,
 		borderRadius: 10,
 	},
 	appDetails: {
@@ -312,7 +329,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 10,
 		elevation: 4, // For Android shadow
 		marginTop: -30, // Slight overlap to hide the edge between sections
-	  },
+	},
 });
 
 export default AppDetail;

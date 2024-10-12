@@ -1,16 +1,6 @@
-- splash DONE
-- check android IDK takes up too much space on computer
-- pease fix buttons in web detail done
-- learn more react native workin on it
-- add settings page done
-- page transitions NOt doing
-- deploy on vercel (i can't deploy it since it is not my gh repo)
-- on the detail page, add screenshotURLs to the thing and make it look more like app store DONE
-
-
-Reddit comments
-
-- Thanks for the hard work! If I may suggest, can you add up “sort from newest to oldest (date added in the github) and sort by name.
+- add placeholder image when failed to load
+- add sorting by type
+- when clicking on a source, show all apps from that source
 
 
 
