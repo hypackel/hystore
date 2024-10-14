@@ -25,6 +25,7 @@ const CustomReposScreen = () => {
 	const [customRepos, setCustomRepos] = useState([]);
 	const [addButtonPressed, setAddButtonPressed] = useState(null);
 	const [resetButtonPressed, setResetButtonPressed] = useState(null);
+	const [activeSwipeable, setActiveSwipeable] = useState(null); // State for active swipeable item
 
 	useEffect(() => {
 		fetchAndDisplayCustomRepos();
@@ -88,11 +89,23 @@ const CustomReposScreen = () => {
 
 	const renderRepoItem = ({ item }) => {
 		return (
-			<Swipeable renderRightActions={() => renderRightActions(item)}>
+			<Swipeable
+				renderRightActions={() => renderRightActions(item)}
+				onSwipeableWillOpen={() => setActiveSwipeable(item)} // Set active swipeable
+				onSwipeableWillClose={() => setActiveSwipeable(null)} // Clear active swipeable
+			>
 				<View className="flex-row justify-between items-center p-3 bg-zinc-800 rounded-lg mb-2">
 					<Text className="text-white text-base truncate line-clamp-1 flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
 						{item}
 					</Text>
+					{/* Conditionally render the red trash icon */}
+					{activeSwipeable !== item && (
+						<Pressable onPress={() => removeCustomRepo(item)}>
+							<Text className="text-red-500 font-bold whitespace-nowrap">
+								<Entypo name="trash" size={24} color="#EF4444" />
+							</Text>
+						</Pressable>
+					)}
 				</View>
 			</Swipeable>
 		);

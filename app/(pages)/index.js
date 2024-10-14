@@ -188,7 +188,7 @@ export default function App() {
 							Source: {item.sourceName}
 						</Text>
 						<Text style={{ color: "#888", marginTop: 4 }} numberOfLines={2}>
-							{item.localizedDescription}
+							{item.subtitle || item.localizedDescription}
 						</Text>
 					</View>
 				</View>
@@ -267,7 +267,9 @@ export default function App() {
 			>
 				<View style={styles.modalContainer}>
 					<View style={styles.modalContent}>
-						<Text style={styles.modalTitle}>Sort by (beta. more options coming soon)</Text>
+						<Text style={styles.modalTitle}>
+							Sort by (beta. more options coming soon)
+						</Text>
 						<TouchableOpacity
 							onPress={() => sortApps("default")}
 							style={styles.optionButton}

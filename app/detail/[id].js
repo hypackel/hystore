@@ -136,6 +136,19 @@ const AppDetail = () => {
 		setModalVisible(true);
 	};
 
+	const formatDate = (timestamp) => {
+		const date = new Date(timestamp);
+		return date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			// hour: '2-digit',
+			// minute: '2-digit',
+			// second: '2-digit',
+			// timeZoneName: 'short',
+		});
+	};
+
 	const closeModal = () => {
 		setModalVisible(false);
 		setSelectedImage(null);
@@ -217,6 +230,17 @@ const AppDetail = () => {
 								<Text style={styles.detailText}>Version: {app.version}</Text>
 							</View>
 						)}
+
+{app.versionDate && (
+    <View style={styles.detailItem}>
+        <MaterialIcons name="info" size={20} color="#8f8d8d" />
+        <Text style={styles.detailText}>
+            Version Date: {formatDate(app.versionDate)}
+        </Text>
+    </View>
+)}
+
+
 						{app.bundleIdentifier && (
 							<View style={styles.detailItem}>
 								<MaterialIcons name="code" size={20} color="#8f8d8d" />
@@ -394,7 +418,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		paddingHorizontal: 0, // Make sure there's no horizontal padding
 	},
-	
+
 	modalImage: {
 		width: 336, // Width of each image
 		height: 704, // Height of each image
