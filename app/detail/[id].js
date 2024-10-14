@@ -268,7 +268,6 @@ const AppDetail = () => {
 				</View>
 			</ScrollView>
 
-			{/* Modal for full-screen image */}
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -276,14 +275,22 @@ const AppDetail = () => {
 				onRequestClose={closeModal}
 			>
 				<View style={styles.modalContainer}>
-					{selectedImage ? (
-						<Image
-							source={{ uri: selectedImage }}
-							style={styles.modalImage} // Regular RN styles
-						/>
-					) : (
-						<Text style={styles.noImageText}>No image available</Text>
-					)}
+					<ScrollView
+						horizontal
+						pagingEnabled
+						showsHorizontalScrollIndicator={false}
+						snapToInterval={316} // Match the width of your modal image
+						decelerationRate="fast"
+						contentContainerStyle={{ paddingHorizontal: 20 }} // Add some padding for the preview
+					>
+						{app.screenshotURLs?.map((url, index) => (
+							<Image
+								key={index}
+								source={{ uri: url }}
+								style={styles.modalImage}
+							/>
+						))}
+					</ScrollView>
 					<Pressable style={styles.closeButton} onPress={closeModal}>
 						<Text style={styles.closeButtonText}>Done</Text>
 					</Pressable>
@@ -380,33 +387,36 @@ const styles = StyleSheet.create({
 		marginLeft: 5, // Space between icon and text
 	},
 	modalContainer: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 1)', // Dark overlay
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    modalImage: {
-        width: 316, // Explicit width
-        height: 684, // Explicit height
-        borderRadius: 20, // Rounded corners
-        overflow: 'hidden', // Ensure rounded corners are respected
-    },
-    noImageText: {
-        color: 'white',
-        fontSize: 18,
-        textAlign: 'center',
-    },
-    closeButton: {
-        position: 'absolute',
-        top: 40,
-        right: 20,
-        padding: 10,
-    },
-    closeButtonText: {
-        color: '#007AFF',
-        fontSize: 18,
-    },
+		flex: 1,
+		backgroundColor: "rgba(0, 0, 0, 1)", // Dark overlay
+		justifyContent: "center",
+		alignItems: "center",
+		paddingVertical: 20,
+	},
+	modalImage: {
+		width: 346, // Width of each image
+		height: 714, // Height of each image
+		borderRadius: 20, // Rounded corners
+		top: 70,
+		overflow: 'hidden', // Ensure rounded corners are respected
+		marginHorizontal: 5, // Margin between images
+	},
+	
+	noImageText: {
+		color: "white",
+		fontSize: 18,
+		textAlign: "center",
+	},
+	closeButton: {
+		position: "absolute",
+		top: 40,
+		right: 20,
+		padding: 10,
+	},
+	closeButtonText: {
+		color: "#007AFF",
+		fontSize: 18,
+	},
 });
 
 export default AppDetail;
