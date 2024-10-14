@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { View, TextInput, FlatList, Text, Pressable } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Swipeable } from 'react-native-gesture-handler';
+import Entypo from "@expo/vector-icons/Entypo";
 
 const DEFAULT_REPOS = [
 	"https://community-apps.sidestore.io/sidecommunity.json",
@@ -75,14 +77,24 @@ const CustomReposScreen = () => {
 		}
 	};
 
+	const renderRightActions = (item) => (
+		<Pressable
+			onPress={() => removeCustomRepo(item)}
+			className="flex justify-center pb-auto h-[42px] items-center p-3 bg-red-500 rounded-md"
+		>
+			<Entypo className="text-white z-20" name="trash" size={24} color="#fff" />
+		</Pressable>
+	);
+
 	const renderRepoItem = ({ item }) => {
 		return (
-			<View className="flex-row justify-between items-center p-3 bg-gray-800 rounded-lg mb-2">
-				<Text className="text-white text-base">{item}</Text>
-				<Pressable onPress={() => removeCustomRepo(item)}>
-					<Text className="text-red-500 font-bold">Remove</Text>
-				</Pressable>
-			</View>
+			<Swipeable renderRightActions={() => renderRightActions(item)}>
+				<View className="flex-row justify-between items-center p-3 bg-zinc-800 rounded-lg mb-2">
+					<Text className="text-white text-base truncate line-clamp-1 flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
+						{item}
+					</Text>
+				</View>
+			</Swipeable>
 		);
 	};
 

@@ -1,11 +1,13 @@
 import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function RootLayout() {
 	return (
+		<GestureHandlerRootView style={{ flex: 1 }}>
 		<Tabs
 			screenOptions={{
 				tabBarStyle: {
@@ -98,5 +100,6 @@ export default function RootLayout() {
 				}}
 			/>
 		</Tabs>
+		</GestureHandlerRootView>
 	);
 }

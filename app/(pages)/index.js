@@ -4,8 +4,10 @@ import {
 	Text,
 	View,
 	ActivityIndicator,
-	Image,
+	TouchableOpacity,
+	Modal,
 	Pressable,
+	StyleSheet,
 	TextInput,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -20,6 +22,8 @@ export default function App() {
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [filterModalVisible, setFilterModalVisible] = useState(false);
+	const [sortOption, setSortOption] = useState("default"); // "date" or "alphabetical"
 
 	// Track pressed item state
 	const [pressedItem, setPressedItem] = useState(null);
@@ -80,21 +84,15 @@ export default function App() {
 
 	useEffect(() => {
 		const loadData = async () => {
-			// Check if customRepos exists in AsyncStorage
 			const customReposJson = await AsyncStorage.getItem("customRepos");
-
-			// If no customRepos, it means this is the first launch, so add the default repos
 			if (!customReposJson) {
 				await saveCustomRepos(defaultRepos);
 			}
-
-			// Load the repos (whether they're default or custom ones)
 			const repos = await loadCustomRepos();
 			fetchData(repos);
 		};
 		loadData();
 
-		// Listen for AsyncStorage changes and refetch data
 		const subscription = EventRegister.addEventListener(
 			"customReposChanged",
 			async () => {
@@ -103,7 +101,6 @@ export default function App() {
 			},
 		);
 
-		// Cleanup the event listener
 		return () => {
 			EventRegister.removeEventListener(subscription);
 		};
@@ -113,6 +110,8 @@ export default function App() {
 		setRefreshing(true);
 		const repos = await loadCustomRepos();
 		fetchData(repos);
+		setSortOption("default"); // Reset to default sorting when refreshing
+		setFilteredData(appsData); // Reset the filtered data to the original
 	};
 
 	const handleSearch = (query) => {
@@ -127,8 +126,31 @@ export default function App() {
 		}
 	};
 
+	const sortApps = (option) => {
+		setSortOption(option);
+		setFilterModalVisible(false);
+
+		let sortedData;
+		if (option === "date") {
+			sortedData = [...filteredData].sort((a, b) => {
+				const dateA = a.version[0]?.date || ""; // Get latest version date
+				const dateB = b.version[0]?.date || "";
+				return new Date(dateB) - new Date(dateA); // Sort by date (most recent first)
+			});
+		} else if (option === "alphabetical") {
+			sortedData = [...filteredData].sort((a, b) =>
+				a.name.localeCompare(b.name),
+			);
+		} else {
+			// If default, reset to original data
+			sortedData = [...appsData];
+		}
+
+		setFilteredData(sortedData);
+	};
+
 	const renderAppItem = ({ item }) => {
-		const isPressed = pressedItem === item.bundleIdentifier+item.sourceUrl;
+		const isPressed = pressedItem === item.bundleIdentifier + item.sourceUrl;
 
 		return (
 			<Pressable
@@ -137,17 +159,17 @@ export default function App() {
 					marginHorizontal: 8,
 					opacity: isPressed ? 0.5 : 1,
 					marginBottom: 16,
-					backgroundColor: "#242424", // Change background on press
+					backgroundColor: "#242424",
 					borderRadius: 12,
 					overflow: "hidden",
 					shadowColor: "#000",
 					shadowOffset: { width: 0, height: 2 },
 					shadowOpacity: 0.8,
 					shadowRadius: 5,
-					elevation: 4, // Card shadow for depth
+					elevation: 4,
 				}}
-				onPressIn={() => setPressedItem(item.bundleIdentifier+item.sourceUrl)} // Set pressed item
-				onPressOut={() => setPressedItem(null)} // Reset pressed item
+				onPressIn={() => setPressedItem(item.bundleIdentifier + item.sourceUrl)}
+				onPressOut={() => setPressedItem(null)}
 				onPress={() =>
 					router.push(
 						`/detail/${item.bundleIdentifier}?source=${encodeURIComponent(item.sourceUrl)}`,
@@ -158,7 +180,6 @@ export default function App() {
 					style={{ flexDirection: "row", padding: 16, alignItems: "center" }}
 				>
 					<AppItemImage iconURL={item.iconURL} />
-
 					<View style={{ flex: 1 }}>
 						<Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 18 }}>
 							{item.name}
@@ -177,17 +198,35 @@ export default function App() {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#121212" }}>
-			<View style={{ padding: 16, backgroundColor: "#1F1F1F" }}>
-				<Text
+			<View
+				style={{
+					paddingVertical: 16,
+					marginBottom: 16,
+					backgroundColor: "#1F1F1F",
+				}}
+			>
+				<View
 					style={{
-						color: "#FFF",
-						fontWeight: "bold",
-						fontSize: 24,
-						marginBottom: 16,
+						padding: 16,
+						backgroundColor: "#1F1F1F",
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
 					}}
 				>
-					Apps
-				</Text>
+					<Text
+						style={{
+							color: "#FFF",
+							fontWeight: "bold",
+							fontSize: 24,
+						}}
+					>
+						Apps
+					</Text>
+					<TouchableOpacity onPress={() => setFilterModalVisible(true)}>
+						<Text style={{ color: "#FFF", fontSize: 18 }}>Filter</Text>
+					</TouchableOpacity>
+				</View>
 				<TextInput
 					placeholder="Search apps..."
 					placeholderTextColor="#888"
@@ -201,11 +240,11 @@ export default function App() {
 						paddingHorizontal: 10,
 						color: "#FFF",
 						backgroundColor: "#2C2C2C",
-						marginBottom: 16,
+						marginBottom: 10,
+						marginHorizontal: 16, // Ensure it aligns with the gray area
 					}}
 				/>
 			</View>
-			<Text>{"\n"}</Text>
 			{loading ? (
 				<ActivityIndicator size="large" color="#ffffff" />
 			) : (
@@ -220,7 +259,84 @@ export default function App() {
 				/>
 			)}
 
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={filterModalVisible}
+				onRequestClose={() => setFilterModalVisible(false)}
+			>
+				<View style={styles.modalContainer}>
+					<View style={styles.modalContent}>
+						<Text style={styles.modalTitle}>Sort by (beta. more options coming soon)</Text>
+						<TouchableOpacity
+							onPress={() => sortApps("default")}
+							style={styles.optionButton}
+						>
+							<Text style={styles.optionText}>Default</Text>
+						</TouchableOpacity>
+						{/* <TouchableOpacity onPress={() => sortApps("date")} style={styles.optionButton}>
+				  <Text style={styles.optionText}>Date</Text>
+				</TouchableOpacity> */}
+						<TouchableOpacity
+							onPress={() => sortApps("alphabetical")}
+							style={styles.optionButton}
+						>
+							<Text style={styles.optionText}>Alphabetical</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => setFilterModalVisible(false)}
+							style={styles.closeButton}
+						>
+							<Text style={styles.closeButtonText}>Close</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
+
 			<StatusBar style="light" />
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	modalContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+	},
+	modalContent: {
+		width: "80%",
+		backgroundColor: "#1f1f1f",
+		borderRadius: 8,
+		padding: 20,
+		color: "#FFF",
+		alignItems: "center",
+	},
+	modalTitle: {
+		fontSize: 18,
+		color: "#FFF",
+		fontWeight: "bold",
+		marginBottom: 16,
+	},
+	optionButton: {
+		padding: 10,
+		color: "#FFF",
+		borderBottomWidth: 1,
+		borderBottomColor: "#ccc",
+		width: "100%",
+	},
+	optionText: {
+		fontSize: 16,
+		color: "#FFF",
+	},
+	closeButton: {
+		marginTop: 20,
+		backgroundColor: "#1F1F1F",
+		padding: 10,
+		borderRadius: 8,
+	},
+	closeButtonText: {
+		color: "#FFF",
+	},
+});
