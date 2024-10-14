@@ -1,25 +1,46 @@
 {
-    "short_name": "HyStore",
-    "name": "Hypackel Sideloading Store",
-    "icons": [
-      {
-        "src": "favicon.png",
-        "sizes": "64x64 32x32 24x24 16x16",
-        "type": "image/x-icon"
-      },
-      {
-        "src": "logo192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      },
-      {
-        "src": "logo512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ],
-    "start_url": ".",
-    "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#ffffff"
-  }
+  "short_name": "HyStore",
+  "name": "HyStore",
+  "description": "HyStore provides an ad-free way to browse apps for iOS sideloading.",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/J8xgtii.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://i.imgur.com/fvlCqow.png",
+      "sizes": "1170x2532",
+      "form_factor": "wide",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/k2zzye2.png",
+      "sizes": "1170x2532",
+      "form_factor": "wide",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/cOqKXq2.png",
+      "sizes": "1170x2532",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "theme_color": "#44ef9a",
+  "background_color": "#1c1c1c",
+  "orientation": "portrait",
+  "categories": ["utilities", "entertainment"],
+  "related_applications": [
+    {
+      "platform": "web",
+      "id": "KittenStore",
+      "url": "https://kittenstore.vercel.app/"
+    }
+  ],
+  "prefer_related_applications": false,
+  "display": "standalone",
+  "display_override": ["fullscreen", "minimal-ui", "window-controls-overlay"]
+}
