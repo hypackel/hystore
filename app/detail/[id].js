@@ -11,7 +11,7 @@ import {
 	TouchableOpacity,
 	Platform,
 } from "react-native";
-import { BlurView } from "expo-blur";
+import { MaterialIcons } from "@expo/vector-icons";
 import FallbackImage from "../components/DetailFallback";
 import { Image } from "expo-image";
 import * as RNImage from "react-native";
@@ -131,6 +131,7 @@ const AppDetail = () => {
 	};
 
 	const openModal = (imageUrl) => {
+		console.log("Opening modal with image URL:", imageUrl); // Add this line
 		setSelectedImage(imageUrl);
 		setModalVisible(true);
 	};
@@ -142,10 +143,10 @@ const AppDetail = () => {
 
 	return (
 		<>
-			<ScrollView className="flex-1 bg-[#1F1F1F]"> 
+			<ScrollView className="flex-1 bg-[#1F1F1F]">
 				{/* App info */}
 				<View className="relative z-30">
-					<View className="absolute right-0 m-2 top-[95px] px-4 py-[0.5] bg-[#1f1f1fc4] rounded-2xl z-30 shadow-md w-full max-w-[96.5%]">
+					<View className="absolute right-0 m-2 top-[95px] px-4 py-[0.5] bg-[#1f1f1fec] rounded-2xl z-30 shadow-md w-full max-w-[96.5%]">
 						<View style={styles.appInfo}>
 							{app.iconURL && (
 								<FallbackImage
@@ -203,34 +204,55 @@ const AppDetail = () => {
 				)}
 
 				<View style={styles.descriptionContainer}>
-					{app.localizedDescription && (
-						<Text className="text-white text-center my-4">
-							{app.localizedDescription}
-						</Text>
-					)}
+					<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+						{app.sourceName && (
+							<View style={styles.detailItem}>
+								<MaterialIcons name="source" size={20} color="#8f8d8d" />
+								<Text style={styles.detailText}>Source: {app.sourceName}</Text>
+							</View>
+						)}
+						{app.version && (
+							<View style={styles.detailItem}>
+								<MaterialIcons name="info" size={20} color="#8f8d8d" />
+								<Text style={styles.detailText}>Version: {app.version}</Text>
+							</View>
+						)}
+						{app.bundleIdentifier && (
+							<View style={styles.detailItem}>
+								<MaterialIcons name="code" size={20} color="#8f8d8d" />
+								<Text style={styles.detailText}>
+									Bundle ID: {app.bundleIdentifier}
+								</Text>
+							</View>
+						)}
+						{app.size && (
+							<View style={styles.detailItem}>
+								<MaterialIcons name="storage" size={20} color="#8f8d8d" />
+								<Text style={styles.detailText}>
+									Size: {(app.size / 1024 / 1024).toFixed(2)} MB
+								</Text>
+							</View>
+						)}
+					</ScrollView>
 
 					{/* Screenshot Thumbnails */}
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
-						className="mb-11"
+						className="mb-11 mt-4"
 					>
-						<View className="flex-row justify-center space-x-1">
+						<View className="flex-row">
 							{app.screenshotURLs?.map((url, index) => (
 								<Pressable
 									key={index}
-									className="mx-4"
+									className="mx-2" // Adjusting the margin for tighter spacing
 									onPress={() => openModal(url)}
 								>
-									<View
-										className="p-2"
-										style={styles.imageContainer} // Apply shadow and corner styles here
-									>
+									<View className="p-2" style={styles.imageContainer}>
 										<RNImage.Image
 											source={{ uri: url }}
-											className="w-[330px] h-[500px] object-contain rounded-lg" // Adjust width and height as needed
-											resizeMode="contain"
-											style={styles.screenshotImage} // Add border radius here
+											className="w-[270px] h-[600px] object-cover" // Adjusted height for iPhone aspect ratio
+											style={styles.screenshotImage} // Use styles for rounded corners
 										/>
 									</View>
 								</Pressable>
@@ -238,21 +260,9 @@ const AppDetail = () => {
 						</View>
 					</ScrollView>
 
-					{app.sourceName && (
-						<Text className="text-gray-400 mb-2">Source: {app.sourceName}</Text>
-					)}
-					{app.version && (
-						<Text className="text-gray-400 mb-2">Version: {app.version}</Text>
-					)}
-					{app.bundleIdentifier && (
-						<Text className="text-gray-400 mb-2">
-							Bundle Identifier: {app.bundleIdentifier}
-						</Text>
-					)}
-					{app.size && (
-						<Text className="text-gray-400 mb-5">
-							Size: {(app.size / 1024 / 1024).toFixed(2)} MB
-							{"\n\n\n\n"}
+					{app.localizedDescription && (
+						<Text className="text-white text-center my-4">
+							{app.localizedDescription}
 						</Text>
 					)}
 				</View>
@@ -265,19 +275,18 @@ const AppDetail = () => {
 				visible={modalVisible}
 				onRequestClose={closeModal}
 			>
-				<View className="flex-1 bg-zinc-700 bg-opacity-75 rounded-md justify-center items-center">
-					<Image
-						source={{ uri: selectedImage }}
-						className="w-[130%] h-auto aspect-[3/4] object-contain"
-						borderRadius={115}
-						resizeMode="contain" // Ensure the image fits well within the modal
-					/>
-					<TouchableOpacity
-						className="absolute top-10 right-10"
-						onPress={closeModal}
-					>
-						<Text className="text-blue-500 text-xl">Done</Text>
-					</TouchableOpacity>
+				<View style={styles.modalContainer}>
+					{selectedImage ? (
+						<Image
+							source={{ uri: selectedImage }}
+							style={styles.modalImage} // Regular RN styles
+						/>
+					) : (
+						<Text style={styles.noImageText}>No image available</Text>
+					)}
+					<Pressable style={styles.closeButton} onPress={closeModal}>
+						<Text style={styles.closeButtonText}>Done</Text>
+					</Pressable>
 				</View>
 			</Modal>
 		</>
@@ -306,7 +315,7 @@ const styles = StyleSheet.create({
 	},
 	developerText: {
 		fontSize: 14,
-		color: "#666",
+		color: "#8f8d8d",
 	},
 	freeButton: {
 		backgroundColor: "#007AFF",
@@ -330,6 +339,74 @@ const styles = StyleSheet.create({
 		elevation: 4, // For Android shadow
 		marginTop: -30, // Slight overlap to hide the edge between sections
 	},
+	imageContainer: {
+		overflow: "hidden",
+		borderRadius: 25, // Ensure rounded edges for the container
+		marginRight: -10, // Slight overlap to create a closer look
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		elevation: 2, // For Android shadow
+	},
+
+	screenshotImage: {
+		borderRadius: 20, // Ensure images have rounded corners to match the container
+	},
+	detailsContainer: {
+		paddingVertical: 10, // Add some vertical padding for aesthetics
+		paddingHorizontal: 10, // Add horizontal padding to the container
+		backgroundColor: "#1F1F1F", // Match background color
+		borderTopLeftRadius: 30, // Rounded corners for aesthetics
+		borderTopRightRadius: 30,
+		shadowColor: "#000", // Shadow for floating effect
+		shadowOffset: { width: 0, height: -6 }, // Only top shadow
+		shadowOpacity: 0.2,
+		shadowRadius: 10,
+		elevation: 4, // For Android shadow
+	},
+
+	detailItem: {
+		flexDirection: "row",
+		alignItems: "center",
+		backgroundColor: "#2E2E2E", // Background for each item
+		borderRadius: 15,
+		padding: 8,
+		marginRight: 10, // Space between items
+	},
+
+	detailText: {
+		color: "#8f8d8d",
+		marginLeft: 5, // Space between icon and text
+	},
+	modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 1)', // Dark overlay
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    modalImage: {
+        width: 316, // Explicit width
+        height: 684, // Explicit height
+        borderRadius: 20, // Rounded corners
+        overflow: 'hidden', // Ensure rounded corners are respected
+    },
+    noImageText: {
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 40,
+        right: 20,
+        padding: 10,
+    },
+    closeButtonText: {
+        color: '#007AFF',
+        fontSize: 18,
+    },
 });
 
 export default AppDetail;
