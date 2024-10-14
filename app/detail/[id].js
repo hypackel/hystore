@@ -279,9 +279,9 @@ const AppDetail = () => {
 						horizontal
 						pagingEnabled
 						showsHorizontalScrollIndicator={false}
-						snapToInterval={316} // Match the width of your modal image
+						snapToInterval={336} // Match the width of your modal image
 						decelerationRate="fast"
-						contentContainerStyle={{ paddingHorizontal: 20 }} // Add some padding for the preview
+						contentContainerStyle={{ paddingHorizontal: 0 }} // Remove padding
 					>
 						{app.screenshotURLs?.map((url, index) => (
 							<Image
@@ -388,20 +388,22 @@ const styles = StyleSheet.create({
 	},
 	modalContainer: {
 		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 1)", // Dark overlay
+		backgroundColor: "rgba(0, 0, 0, 1)",
 		justifyContent: "center",
 		alignItems: "center",
 		paddingVertical: 20,
-	},
-	modalImage: {
-		width: 346, // Width of each image
-		height: 714, // Height of each image
-		borderRadius: 20, // Rounded corners
-		top: 70,
-		overflow: 'hidden', // Ensure rounded corners are respected
-		marginHorizontal: 5, // Margin between images
+		paddingHorizontal: 0, // Make sure there's no horizontal padding
 	},
 	
+	modalImage: {
+		width: 336, // Width of each image
+		height: 704, // Height of each image
+		borderRadius: 20, // Rounded corners
+		top: 70,
+		overflow: "hidden", // Ensure rounded corners are respected
+		marginHorizontal: 7, // Margin between images
+	},
+
 	noImageText: {
 		color: "white",
 		fontSize: 18,
