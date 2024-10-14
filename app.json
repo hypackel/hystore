@@ -2,7 +2,7 @@
   "expo": {
     "name": "HyStore",
     "slug": "hypackel",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "myapp",
@@ -28,11 +28,6 @@
     "plugins": [
       "expo-router"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "41ce095e-80d7-461e-80d4-9777403dc522"
-      }
-    },
     "owner": "hypackel1",
     "runtimeVersion": {
       "policy": "appVersion"
