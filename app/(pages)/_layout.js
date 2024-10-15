@@ -55,7 +55,6 @@ export default function RootLayout() {
 						borderBottomWidth: 0,
 						height: 40, // Make the header smaller
 					},
-					tabBarButton: () => null, // Hide the tab button
 				}}
 			/>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, FlatList, Image, ActivityIndicator, Linking, StyleSheet, StatusBar } from 'react-native';
 
 const defaultRepos = [
   'https://community-apps.sidestore.io/sidecommunity.json',
@@ -47,45 +47,126 @@ const NewsSection = () => {
     fetchNews();
   }, []);
 
+  const renderItem = ({ item }) => (
+    <View style={styles.newsItem}>
+      <Text style={styles.newsTitle}>{item.title}</Text>
+      {item.imageURL && (
+        <Image
+          source={{ uri: item.imageURL }}
+          style={styles.newsImage}
+          resizeMode="cover"
+        />
+      )}
+      <Text style={styles.newsDate}>{item.date}</Text>
+      <Text style={styles.newsCaption}>{item.caption}</Text>
+      {item.url && (
+        <Text
+          style={styles.newsLink}
+          onPress={() => Linking.openURL(item.url)}
+        >
+          Read More
+        </Text>
+      )}
+    </View>
+  );
+
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00ff00" />
-        <Text className="text-white">Fetching news...</Text>
+        <Text style={styles.loadingText}>Fetching news...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView className="p-4 bg-zinc-900">
-      <Text className="text-2xl font-bold text-white mb-4">Latest News</Text>
-      {news.map((item, index) => (
-        <View key={item+Math.random()} className="mb-6">
-          <Text className="text-xl font-bold text-white mb-2">{item.title}</Text>
-          {item.imageURL && (
-            <Image
-              source={{ uri: item.imageURL }}
-              style={{ height: 150, width: '100%', borderRadius: 8 }}
-              resizeMode="cover"
-            />
-          )}
-          <Text className="text-gray-400 mb-2">{item.date}</Text>
-          <Text className="text-gray-200 mb-4">{item.caption}</Text>
-          {item.url && (
-            <Text
-              className="text-blue-500 underline"
-              onPress={() => {
-                // Navigate to external news URL
-                Linking.openURL(item.url);
-              }}
-            >
-              Read More
-            </Text>
-          )}
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.mainContainer}>
+      <StatusBar barStyle="light-content" />
+      <Text style={styles.headerText}>Latest News</Text>
+      <FlatList
+        data={news}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item.title + index}
+        numColumns={2} // Display two items per row
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.contentContainer}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#181818', // Consistent dark background
+    paddingTop: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#121212', // Dark background during loading
+  },
+  loadingText: {
+    color: '#ffffff',
+    marginTop: 10,
+  },
+  headerText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    backgroundColor: '#181818', // Dark background for header
+    textAlign: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#303030',
+  },
+  contentContainer: {
+    paddingBottom: 16,
+    paddingHorizontal: 8,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  newsItem: {
+    backgroundColor: '#242424',
+    flex: 1,
+    marginHorizontal: 8,
+    marginBottom: 16,
+    borderRadius: 8,
+    padding: 10,
+    justifyContent: 'space-between',
+    elevation: 3, // Add slight shadow for card depth
+  },
+  newsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 8,
+  },
+  newsImage: {
+    height: 120,
+    width: '100%',
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  newsDate: {
+    fontSize: 12,
+    color: '#888888',
+    marginBottom: 8,
+  },
+  newsCaption: {
+    fontSize: 14,
+    color: '#dddddd',
+    marginBottom: 8,
+  },
+  newsLink: {
+    fontSize: 14,
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
+  },
+});
 
 export default NewsSection;
