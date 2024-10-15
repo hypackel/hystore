@@ -217,7 +217,7 @@ const AppDetail = () => {
 				)}
 
 				<View style={styles.descriptionContainer}>
-					<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+					<View style={styles.detailItemsContainer}>
 						{app.sourceName && (
 							<View style={styles.detailItem}>
 								<MaterialIcons name="source" size={20} color="#8f8d8d" />
@@ -230,17 +230,14 @@ const AppDetail = () => {
 								<Text style={styles.detailText}>Version: {app.version}</Text>
 							</View>
 						)}
-
-{app.versionDate && (
-    <View style={styles.detailItem}>
-        <MaterialIcons name="info" size={20} color="#8f8d8d" />
-        <Text style={styles.detailText}>
-            Version Date: {formatDate(app.versionDate)}
-        </Text>
-    </View>
-)}
-
-
+						{app.versionDate && (
+							<View style={styles.detailItem}>
+								<MaterialIcons name="info" size={20} color="#8f8d8d" />
+								<Text style={styles.detailText}>
+									Version Date: {formatDate(app.versionDate)}
+								</Text>
+							</View>
+						)}
 						{app.bundleIdentifier && (
 							<View style={styles.detailItem}>
 								<MaterialIcons name="code" size={20} color="#8f8d8d" />
@@ -257,7 +254,7 @@ const AppDetail = () => {
 								</Text>
 							</View>
 						)}
-					</ScrollView>
+					</View>
 
 					{/* Screenshot Thumbnails */}
 					<ScrollView
@@ -269,14 +266,14 @@ const AppDetail = () => {
 							{app.screenshotURLs?.map((url, index) => (
 								<Pressable
 									key={index}
-									className="mx-2" // Adjusting the margin for tighter spacing
+									className="mx-2"
 									onPress={() => openModal(url)}
 								>
 									<View className="p-2" style={styles.imageContainer}>
 										<RNImage.Image
 											source={{ uri: url }}
-											className="w-[270px] h-[600px] object-cover" // Adjusted height for iPhone aspect ratio
-											style={styles.screenshotImage} // Use styles for rounded corners
+											className="w-[270px] h-[600px] object-cover"
+											style={styles.screenshotImage}
 										/>
 									</View>
 								</Pressable>
@@ -290,6 +287,7 @@ const AppDetail = () => {
 						</Text>
 					)}
 				</View>
+
 			</ScrollView>
 
 			<Modal
@@ -325,124 +323,126 @@ const AppDetail = () => {
 };
 
 const styles = StyleSheet.create({
-	appInfo: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginVertical: 20,
-	},
-	appIcon: {
-		width: 65,
-		height: 65,
-		borderRadius: 10,
-	},
-	appDetails: {
-		flex: 1,
-		marginLeft: 10,
-	},
-	appTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		color: "#fff",
-	},
-	developerText: {
-		fontSize: 14,
-		color: "#8f8d8d",
-	},
-	freeButton: {
-		backgroundColor: "#007AFF",
-		paddingHorizontal: 15,
-		paddingVertical: 5,
-		borderRadius: 15,
-	},
-	freeButtonText: {
-		color: "#fff",
-		fontWeight: "bold",
-	},
-	descriptionContainer: {
-		backgroundColor: "#1F1F1F", // Gray background
-		padding: 20,
-		borderTopLeftRadius: 30, // Rounded top-left corner
-		borderTopRightRadius: 30, // Rounded top-right corner
-		shadowColor: "#000", // Shadow for floating effect
-		shadowOffset: { width: 0, height: -6 }, // Only top shadow
-		shadowOpacity: 0.2,
-		shadowRadius: 10,
-		elevation: 4, // For Android shadow
-		marginTop: -30, // Slight overlap to hide the edge between sections
-	},
-	imageContainer: {
-		overflow: "hidden",
-		borderRadius: 25, // Ensure rounded edges for the container
-		marginRight: -10, // Slight overlap to create a closer look
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.2,
-		shadowRadius: 3,
-		elevation: 2, // For Android shadow
-	},
-
-	screenshotImage: {
-		borderRadius: 20, // Ensure images have rounded corners to match the container
-	},
-	detailsContainer: {
-		paddingVertical: 10, // Add some vertical padding for aesthetics
-		paddingHorizontal: 10, // Add horizontal padding to the container
-		backgroundColor: "#1F1F1F", // Match background color
-		borderTopLeftRadius: 30, // Rounded corners for aesthetics
-		borderTopRightRadius: 30,
-		shadowColor: "#000", // Shadow for floating effect
-		shadowOffset: { width: 0, height: -6 }, // Only top shadow
-		shadowOpacity: 0.2,
-		shadowRadius: 10,
-		elevation: 4, // For Android shadow
-	},
-
-	detailItem: {
-		flexDirection: "row",
-		alignItems: "center",
-		backgroundColor: "#2E2E2E", // Background for each item
-		borderRadius: 15,
-		padding: 8,
-		marginRight: 10, // Space between items
-	},
-
-	detailText: {
-		color: "#8f8d8d",
-		marginLeft: 5, // Space between icon and text
-	},
-	modalContainer: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 1)",
-		justifyContent: "center",
-		alignItems: "center",
-		paddingVertical: 20,
-		paddingHorizontal: 0, // Make sure there's no horizontal padding
-	},
-
-	modalImage: {
-		width: 336, // Width of each image
-		height: 704, // Height of each image
-		borderRadius: 20, // Rounded corners
-		top: 70,
-		overflow: "hidden", // Ensure rounded corners are respected
-		marginHorizontal: 7, // Margin between images
-	},
-
-	noImageText: {
-		color: "white",
-		fontSize: 18,
-		textAlign: "center",
-	},
-	closeButton: {
-		position: "absolute",
-		top: 40,
-		right: 20,
-		padding: 10,
-	},
-	closeButtonText: {
-		color: "#007AFF",
-		fontSize: 18,
-	},
+    appInfo: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 20,
+    },
+    appIcon: {
+        width: 65,
+        height: 65,
+        borderRadius: 10,
+    },
+    appDetails: {
+        flex: 1,
+        marginLeft: 10,
+    },
+    appTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#fff",
+    },
+    developerText: {
+        fontSize: 14,
+        color: "#8f8d8d",
+    },
+    freeButton: {
+        backgroundColor: "#007AFF",
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+        borderRadius: 15,
+    },
+    freeButtonText: {
+        color: "#fff",
+        fontWeight: "bold",
+    },
+    descriptionContainer: {
+        backgroundColor: "#1F1F1F", // Gray background
+        padding: 20,
+        borderTopLeftRadius: 30, // Rounded top-left corner
+        borderTopRightRadius: 30, // Rounded top-right corner
+        shadowColor: "#000", // Shadow for floating effect
+        shadowOffset: { width: 0, height: -6 }, // Only top shadow
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        elevation: 4, // For Android shadow
+        marginTop: -30, // Slight overlap to hide the edge between sections
+    },
+    detailItemsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap', // Allows the items to wrap to the next line
+        justifyContent: 'space-between', // Distributes space between items
+    },
+    detailItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#2E2E2E", // Background for each item
+        borderRadius: 15,
+        padding: 8,
+        marginBottom: 10, // Add margin between items vertically
+        marginRight: 10, // Space between items
+        paddingHorizontal: 5, // Adjust padding for horizontal spacing
+    },
+    detailText: {
+        color: "#8f8d8d",
+        marginLeft: 5, // Space between icon and text
+    },
+    imageContainer: {
+        overflow: "hidden",
+        borderRadius: 25, // Ensure rounded edges for the container
+        marginRight: -10, // Slight overlap to create a closer look
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 2, // For Android shadow
+    },
+    screenshotImage: {
+        borderRadius: 20, // Ensure images have rounded corners to match the container
+    },
+    detailsContainer: {
+        paddingVertical: 10, // Add some vertical padding for aesthetics
+        paddingHorizontal: 10, // Add horizontal padding to the container
+        backgroundColor: "#1F1F1F", // Match background color
+        borderTopLeftRadius: 30, // Rounded corners for aesthetics
+        borderTopRightRadius: 30,
+        shadowColor: "#000", // Shadow for floating effect
+        shadowOffset: { width: 0, height: -6 }, // Only top shadow
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        elevation: 4, // For Android shadow
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 1)",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingVertical: 20,
+        paddingHorizontal: 0, // Make sure there's no horizontal padding
+    },
+    modalImage: {
+        width: 336, // Width of each image
+        height: 704, // Height of each image
+        borderRadius: 20, // Rounded corners
+        top: 70,
+        overflow: "hidden", // Ensure rounded corners are respected
+        marginHorizontal: 7, // Margin between images
+    },
+    noImageText: {
+        color: "white",
+        fontSize: 18,
+        textAlign: "center",
+    },
+    closeButton: {
+        position: "absolute",
+        top: 40,
+        right: 20,
+        padding: 10,
+    },
+    closeButtonText: {
+        color: "#007AFF",
+        fontSize: 18,
+    },
 });
 
 export default AppDetail;
