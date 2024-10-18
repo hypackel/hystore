@@ -2,7 +2,7 @@
 
 Welcome to **HyStore**!
 
-HyStore is a clean and ad-free app for browsing altstore library's and installing apps from them.
+HyStore is a clean and ad-free app for browsing altstore library's and installing apps from them. The project is made in react native with expo. Below are the instructions for compiling an IPA if you feel like it, if you don't check the releases tab. This readme also includes contributing to to our project if you are instrested. This project is licenced under CC BY-NC meaning you can do whatever you want with it as long is it is not for a commercial use, read the full license for more information.
 
 ## How to Build an .ipa
 
@@ -133,8 +133,8 @@ echo "Node found at: $NODE_BINARY"
 
 ## Contribututing
 
-idfk just trust
+If you are instrested in contriuting please contact either hypackel or codingkitten.
 
 ## License
 
-I also dfk so just figure it out
+This project is licensed under CC BY-NC read the full license here: [LICENSE](LICENSE)
