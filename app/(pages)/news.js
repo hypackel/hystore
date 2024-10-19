@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, ActivityIndicator, Linking, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, FlatList, Image, ActivityIndicator, Linking, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const defaultRepos = [
   'https://community-apps.sidestore.io/sidecommunity.json',
@@ -19,6 +20,7 @@ const defaultRepos = [
 const NewsSection = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -29,7 +31,11 @@ const NewsSection = () => {
           const data = await response.json();
 
           if (data.news) {
-            allNews = [...allNews, ...data.news]; // Collect news articles
+            const newsWithSource = data.news.map((item) => ({
+              ...item,
+              sourceUrl: repo, // Store the source URL with each news item
+            }));
+            allNews = [...allNews, ...newsWithSource];
           }
         }
 
@@ -48,7 +54,16 @@ const NewsSection = () => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <View style={styles.newsItem}>
+    <TouchableOpacity
+      onPress={() => {
+        if (item.appID) {
+          router.push(`/detail/${item.appID}?source=${encodeURIComponent(item.sourceUrl)}`);
+        } else if (item.url) {
+          Linking.openURL(item.url);
+        }
+      }}
+      style={styles.newsItem}
+    >
       <Text style={styles.newsTitle}>{item.title}</Text>
       {item.imageURL && (
         <Image
@@ -59,15 +74,10 @@ const NewsSection = () => {
       )}
       <Text style={styles.newsDate}>{item.date}</Text>
       <Text style={styles.newsCaption}>{item.caption}</Text>
-      {item.url && (
-        <Text
-          style={styles.newsLink}
-          onPress={() => Linking.openURL(item.url)}
-        >
-          Read More
-        </Text>
+      {!item.appID && item.url && (
+        <Text style={styles.newsLink}>Read More</Text>
       )}
-    </View>
+    </TouchableOpacity>
   );
 
   if (loading) {
@@ -87,7 +97,7 @@ const NewsSection = () => {
         data={news}
         renderItem={renderItem}
         keyExtractor={(item, index) => item.title + index}
-        numColumns={2} // Display two items per row
+        numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.contentContainer}
       />
@@ -98,14 +108,14 @@ const NewsSection = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#181818', // Consistent dark background
+    backgroundColor: '#181818',
     paddingTop: 10,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#121212', // Dark background during loading
+    backgroundColor: '#121212',
   },
   loadingText: {
     color: '#ffffff',
@@ -117,7 +127,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     paddingHorizontal: 16,
     paddingBottom: 10,
-    backgroundColor: '#181818', // Dark background for header
+    backgroundColor: '#181818',
     textAlign: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#303030',
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     justifyContent: 'space-between',
-    elevation: 3, // Add slight shadow for card depth
+    elevation: 3,
   },
   newsTitle: {
     fontSize: 16,
